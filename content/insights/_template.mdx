@@ -1,0 +1,37 @@
+---
+title: Insight template (private)
+description: Editorial skeleton for a new article. Never published — files prefixed with an underscore are excluded.
+date: 2026-09-02
+tags: []
+featured: false
+---
+
+This file is a **private template**, not an article. Its only purpose is to keep the
+dynamic MDX import glob resolvable during Turbopack builds when no article has been
+published yet.
+
+To write a real article:
+
+1. Copy this file to a new slug, e.g. `my-first-article.mdx` (omit the leading `_`).
+2. Fill in the frontmatter:
+
+```yaml
+---
+title: A clear, specific headline
+description: One or two sentences that appear on the index card and in SEO metadata.
+date: YYYY-MM-DD
+tags: [networking, azure, security]
+featured: true
+---
+```
+
+3. Write the body in Markdown + MDX. Use `##` and `###` headings — they become the
+   in-page table of contents and get automatic anchor links. Other Markdown (lists,
+   tables, code blocks, links, images) renders with the global prose styles.
+
+Conventions:
+
+- Frontmatter is required; `date` must be `YYYY-MM-DD`.
+- `featured: true` pins the article to the top of the index.
+- File names are URL slugs; use kebab-case and avoid special characters.
+- A file starting with `_` is never published (index, sitemap, or direct route).
