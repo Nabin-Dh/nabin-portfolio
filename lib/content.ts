@@ -13,31 +13,57 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       "Network Administration",
       "TCP/IP & IP Addressing",
       "Routing & Switching",
+      "Inter-VLAN Routing",
       "Wireless Networking",
+      "Network Security",
     ],
   },
   {
-    title: "Systems",
+    title: "Systems & Infrastructure",
     description:
       "Administering servers and operating systems across physical and virtualized environments.",
     skills: [
       "System Administration",
       "Windows & Linux",
       "Virtualization",
-      "VMware ESXi",
       "Infrastructure Troubleshooting",
+      "Patch & Lifecycle Management",
     ],
   },
   {
-    title: "Cloud",
-    description: "Designing and securing scalable cloud infrastructure.",
-    skills: ["Cloud Infrastructure", "Microsoft Azure", "AWS"],
+    title: "Cloud & Virtualization",
+    description:
+      "Designing and securing cloud and virtualized infrastructure, applied on Azure and AWS.",
+    skills: [
+      "Cloud Infrastructure",
+      "Virtual Networking",
+      "Subnet Segmentation",
+      "IaaS Compute",
+      "Observability & Monitoring",
+    ],
   },
   {
     title: "Cybersecurity",
     description:
       "Securing networks and infrastructure with awareness of modern threats.",
-    skills: ["Cybersecurity", "Network Security"],
+    skills: [
+      "Cybersecurity",
+      "Network Security",
+      "Security Hardening",
+      "Identity & Access (RBAC)",
+      "Zero-Trust Fundamentals",
+    ],
+  },
+  {
+    title: "IT Operations & Technical Support",
+    description:
+      "Day-to-day reliability, documentation, and hands-on problem solving that keeps infrastructure running.",
+    skills: [
+      "Infrastructure Design",
+      "Backup & Recovery",
+      "Documentation",
+      "Technical Problem Solving",
+    ],
   },
 ];
 
@@ -101,6 +127,14 @@ export type Project = {
   overview: string;
   technologies: string[];
   repository: string;
+  /**
+   * Optional case-study sections shown on the detail page when provided.
+   * Leave undefined (or empty arrays) to keep the current concise layout.
+   */
+  context?: string;
+  objective?: string;
+  approach?: string;
+  outcomes?: string;
 };
 
 export const PROJECTS: Project[] = [

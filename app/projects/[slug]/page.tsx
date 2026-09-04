@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/fx/Reveal";
+import { SpotlightCard } from "@/components/fx/SpotlightCard";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { Button } from "@/components/ui/Button";
@@ -73,7 +74,10 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           </Reveal>
 
           <Reveal delay={60}>
-            <h2 className="mt-10 text-2xl font-semibold tracking-tight text-text-primary">
+            <span className="mt-10 inline-block rounded-md border border-border-subtle bg-accent-muted px-2.5 py-1 font-mono text-xs uppercase tracking-widest text-accent">
+              {project.category}
+            </span>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight text-text-primary">
               Overview
             </h2>
             <p className="mt-4 text-lg leading-8 text-text-secondary">
@@ -81,17 +85,61 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
             </p>
           </Reveal>
 
-          <Reveal delay={100}>
+          {project.context ? (
+            <Reveal delay={80}>
+              <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
+                Context
+              </h2>
+              <p className="mt-4 leading-8 text-text-secondary">
+                {project.context}
+              </p>
+            </Reveal>
+          ) : null}
+
+          {project.objective ? (
+            <Reveal delay={90}>
+              <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
+                Objective
+              </h2>
+              <p className="mt-4 leading-8 text-text-secondary">
+                {project.objective}
+              </p>
+            </Reveal>
+          ) : null}
+
+          {project.approach ? (
+            <Reveal delay={100}>
+              <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
+                Approach
+              </h2>
+              <p className="mt-4 leading-8 text-text-secondary">
+                {project.approach}
+              </p>
+            </Reveal>
+          ) : null}
+
+          <Reveal delay={110}>
             <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
-              Technologies
+              Technologies &amp; concepts
             </h2>
             <div className="mt-5">
               <TagList tags={project.technologies} />
             </div>
           </Reveal>
 
+          {project.outcomes ? (
+            <Reveal delay={120}>
+              <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
+                Outcomes
+              </h2>
+              <p className="mt-4 leading-8 text-text-secondary">
+                {project.outcomes}
+              </p>
+            </Reveal>
+          ) : null}
+
           <Reveal delay={140}>
-            <div className="mt-12 flex flex-wrap gap-3 border-t border-white/[0.06] pt-8">
+            <div className="mt-12 flex flex-wrap gap-3 border-t border-border-subtle pt-8">
               <Button asChild>
                 <Link
                   href={project.repository}
@@ -107,7 +155,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
         </div>
 
         {related.length > 0 ? (
-          <section className="mt-24 border-t border-white/[0.06] pt-12">
+          <section className="mt-24 border-t border-border-subtle pt-12">
             <Reveal>
               <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
                 Related projects
@@ -116,7 +164,9 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
             <div className="mt-8 grid gap-6 lg:grid-cols-2">
               {related.map((relatedProject, index) => (
                 <Reveal key={relatedProject.slug} delay={index * 60}>
-                  <ProjectCard project={relatedProject} />
+                  <SpotlightCard className="h-full">
+                    <ProjectCard project={relatedProject} />
+                  </SpotlightCard>
                 </Reveal>
               ))}
             </div>

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
-import { CV_PATH, SITE } from "@/lib/constants";
+import { CONTACT_TOPICS, CV_PATH, SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -48,13 +48,6 @@ const CHANNELS = [
   },
 ] as const;
 
-const TOPICS = [
-  "Infrastructure roles",
-  "Networking or cloud engineering work",
-  "Consulting & collaboration",
-  "Architecture feedback",
-] as const;
-
 export default function ContactPage() {
   return (
     <div className="flex flex-col">
@@ -72,7 +65,8 @@ export default function ContactPage() {
                 Send a message
               </h2>
               <p className="mt-3 text-text-secondary">
-                The form opens your email client with the message pre-filled.
+                Fill in the form and your message is delivered securely to my
+                inbox — no extra apps needed.
               </p>
               <div className="mt-8">
                 <ContactForm />
@@ -97,9 +91,9 @@ export default function ContactPage() {
                         href={channel.href}
                         target={isMailto ? undefined : "_blank"}
                         rel={isMailto ? undefined : "noopener noreferrer"}
-                        className="group flex items-center gap-4 rounded border border-white/[0.06] bg-background-card p-4 transition-colors hover:border-accent"
+                        className="group flex items-center gap-4 rounded-xl border border-border-subtle bg-background-card p-4 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-accent hover:shadow-[var(--shadow-card-hover)]"
                       >
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-white/10 text-text-secondary group-hover:text-accent">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-text-secondary transition-colors group-hover:text-accent">
                           <Icon className="h-5 w-5" />
                         </div>
                         <div className="min-w-0">
@@ -118,12 +112,12 @@ export default function ContactPage() {
             </Reveal>
 
             <Reveal delay={160}>
-              <div className="mt-8 rounded border border-white/[0.06] bg-background-card p-6">
+              <div className="mt-8 rounded-xl border border-border-subtle bg-background-card p-6">
                 <h3 className="text-lg font-semibold text-text-primary">
                   What I&apos;m open to
                 </h3>
                 <ul className="mt-4 space-y-2">
-                  {TOPICS.map((topic) => (
+                  {CONTACT_TOPICS.map((topic) => (
                     <li
                       key={topic}
                       className="before:mr-2 before:text-accent before:content-['·'] text-sm text-text-secondary"
@@ -136,7 +130,7 @@ export default function ContactPage() {
             </Reveal>
 
             <Reveal delay={200}>
-              <div className="mt-8 flex flex-col gap-3 rounded border border-white/[0.06] bg-background-card p-6">
+              <div className="mt-8 flex flex-col gap-3 rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)]">
                 <h3 className="text-lg font-semibold text-text-primary">CV</h3>
                 <p className="text-sm leading-6 text-text-secondary">
                   Download my current CV for a full overview of skills and

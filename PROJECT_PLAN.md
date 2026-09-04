@@ -96,24 +96,27 @@ RootLayout
 ## Design Direction
 
 ### Visual Identity
-- **Dark theme only** — deep navy/charcoal (#0a0e1a)
-- **Accent:** Steel blue (#3b82f6), used sparingly
+- **Light + Dark theme** — complete light/dark theme system with system-preference detection, localStorage persistence, and no-FOUC inline script. Toggle in the navbar (accessible, keyboard-operable, with `aria-label`/`role="switch"`).
+- **Light:** warm off-white background (#f8f9fb), dark text (#111827)
+- **Dark:** deep navy (#0a0e1a), light text (#e5e7eb)
+- **Accent:** Steel blue (#2563eb light / #3b82f6 dark), used sparingly
 - **Typography:** Inter for body, JetBrains Mono for code/technical labels
-- **No:** glowing effects, particle backgrounds, animated gradients, floating elements
-- **Texture:** Subtle grid/dot patterns at 2-3% opacity (engineering paper feel)
-- **Borders:** 1px low-opacity white for cards/sections
-- **Shadows:** Minimal — depth through border contrast
+- **No:** glowing effects, particle backgrounds, over-animated gradient, floating elements
+- **Texture:** Subtle grid/dot patterns at low opacity (engineering paper feel)
+- **Borders:** 1px low-opacity border for cards/sections (theme-aware)
+- **Shadows:** Minimal — depth through border contrast + subtle elevation on hover
+- **Motion:** tasteful scroll-reveal, spotlight cards, page transitions — all respecting `prefers-reduced-motion`
 
 ### Design Tokens
 ```
---color-bg-primary:     #0a0e1a
---color-bg-secondary:   #111827
---color-bg-card:        #1a1f2e
---color-border:         rgba(255,255,255,0.06)
---color-text-primary:   #e5e7eb
---color-text-secondary: #9ca3af
---color-accent:         #3b82f6
---color-accent-muted:   rgba(59,130,246,0.12)
+--color-bg-primary:     #f8f9fb   (light)  /  #0a0e1a  (dark)
+--color-bg-secondary:   #f0f2f5   (light)  /  #111827  (dark)
+--color-bg-card:        #ffffff   (light)  /  #151c2e  (dark)
+--color-border:         rgba(9,12,22,0.08) / rgba(243,244,246,0.08)
+--color-text-primary:   #111827   (light)  /  #e5e7eb  (dark)
+--color-text-secondary: #6b7280   (light)  /  #9ca3af  (dark)
+--color-accent:         #2563eb   (light)  /  #3b82f6  (dark)
+--color-accent-muted:   rgba(37,99,235,0.08) / rgba(59,130,246,0.12)
 ```
 
 ---
@@ -459,14 +462,23 @@ guide. A developer is only needed for structural/design/code changes.
 
 ## Current Project Status
 
-**Phase:** 8 — Final Architecture + Maintenance Preparation
-**Status:** ✅ COMPLETE — production architecture finalized (`GitHub → Azure SWA Free → Cloudflare DNS → nabindhungana.com`), a non-expert **MAINTENANCE.md** guide created, a final security architecture review completed, and the repo scanned clean for localhost/dev-machine references, secrets, and asset-path problems. All validation green: lint, typecheck, production build, all route checks, security headers, dependency/secret/asset scans. **Nothing has been deployed and no CMS/backend/database was added.** Remaining is the owner's content + the actual Phase 9/10 provisioning (deployment).
+**Phase:** 8 → 9 — Final Architecture + Maintenance Preparation / Polish & QA
+
+**Status (2026-09-03):** ✅ COMPLETE — production architecture finalized (`GitHub → Azure SWA Free → Cloudflare DNS → nabindhungana.com`), non-expert **MAINTENANCE.md** guide created, full light/dark theme system implemented, all pages refined with consistent theme-aware styling, premium UX/visual polish applied (icons in skill cards, refined hero with technical details panel, improved project/insight cards, contact validation, refined author card), and security/SEO/performance maintained. Remaining is the owner's real content (CV, profile photo, articles) + actual Phase 9/10 provisioning (deployment).
 
 **Environment:** Next.js 16.3.4 (Turbopack), React 19.2.8, TypeScript 5, Tailwind CSS v4 (typography plugin), @next/mdx + gray-matter. Production output: standard Node runtime (`next start`), container-agnostic, portable to Azure SWA / Vercel / Netlify / App Service.
 
-**Pending from Nabin:** real CV PDF, profile photo, formal education info, insight article topics/content, Git remote + hosting wiring, live-domain env value. Remaining code work before launch: Phase 9 QA (Lighthouse, cross-browser/mobile, live CSP/headers check).
+**Pending from Nabin:** real CV PDF, formal education info, insight article topics/content, Git remote + hosting wiring, live-domain env value, and the backend's external configuration (SendGrid + Azure datastore app-settings). (Profile photo now present at `public/profile/profile.jpeg`.) Remaining code work before launch: Phase 9 QA (Lighthouse, cross-browser/mobile, live CSP/headers check), optional future owner-notification features, RSS feed.
 
-**Final validation (2026-09-02, re-run after docs):** lint clean (49 files), typecheck clean, production build green (16 routes), all 16 routes verified via `curl --max-time 10` — 13× 200 (incl `/cv`) and 3× 404 (unknown slugs) — 6 security headers verified (no `X-Powered-By`), `/cv` attachment + cache headers verified, dependency/secret/localhost/asset scans clean, README linked to MAINTENANCE.md. No deploy, no new phase started.
+**Final validation (2026-09-03, after visual/theme refinements):** lint clean, typecheck clean, production build green, all route checks verified.
+
+**QA harden pass (2026-09-03):** lint clean, typecheck clean, production build green (17 routes). Professional refinements landed — see "Phase 9 — Prefix QA harden pass (2026-09-03)" below.
+
+**Next implementation phase (2026-09-03):** profile photo integrated (`.jpeg` support added to `ProfilePhoto`), `SKILL_CATEGORIES` reorganized into 5 broad professional categories (Networking; Systems & Infrastructure; Cloud & Virtualization; Cybersecurity; IT Operations & Technical Support) with vendor/product names removed from core-skill lists, and the Insights feedback/view architecture scaffolded (`lib/feedback.ts` + `ArticleFeedback`). Validation: lint clean (54 files), typecheck clean, production build green (17 routes). Remaining from the target list: content-depth placeholders across pages, MAINTENANCE.md expansion, contact backend-prep docs, and final visual/responsive QA — deferred to the next phase.
+
+**Feedback widget finished (2026-09-03):** `ArticleFeedback` UI polished and verified honest about persistence — `lib/feedback.ts` keeps `feedbackEnabled = false` with `getArticleMetrics` returning `null` and `recordFeedback` a typed no-op stub (no counts shown, none faked); the widget is explicitly non-persistent (local state only) and its muted note states feedback isn't stored yet. Responsive/a11y pass: label now full-width on small screens so the buttons group on their own row, `aria-live="polite"` status message announces selection to screen readers (added "Thanks — marked as useful/not useful in this session only."), buttons remain native with `focus-visible` outlines and `aria-pressed`. Validation: lint clean (54 files), typecheck clean, production build green (17 routes).
+
+**Backend phase (2026-09-03) — serverless API implemented & validated:** a production serverless backend was added in `api/` (Azure Functions, Node 20). **Contact**: `POST /api/contact` validates + sanitizes (strips control chars to block header injection), applies anti-abuse (honeypot, min-submit-time, per-IP rate limit, request-size limit), and delivers via SendGrid from a verified sender to `CONTACT_TO_EMAIL` — all secrets via server-side env vars. **Article metrics**: `POST /api/insights/views`, `POST /api/insights/reaction`, `GET /api/insights?slug=` persist real view/reaction counts in Azure Table Storage with authoritative de-dup (one view/article/day and one reaction/article per random non-personal visitorId) — never fabricates numbers and degrades gracefully (renders nothing) when the datastore is unconfigured. **Client wiring**: `ContactForm` now POSTs with loading/success/error states + a mailto fallback; `lib/feedback.ts` is the client API layer; `ArticleFeedback` (reactions) and new `ArticleMetrics` (views) show counts only when the backend returns real numbers. **Value**: same-origin `/api` via SWA (no CORS config); no always-running server; no local DB; no hard-coded resource IDs or secrets; `.github/workflows/azure-static-web-apps.yml` scaffold with `api_build_command`. Validation: root lint clean, typecheck clean, production build green (17 routes); **api TypeScript compiles clean** (`tsc -p api/tsconfig.json` → `dist/`). Remaining for the owner: provisioning SendGrid + datastore + app-settings (see MAINTENANCE.md §§20-25).
 
 ---
 
@@ -543,6 +555,11 @@ guide. A developer is only needed for structural/design/code changes.
 - [x] Phase 8 — production architecture finalized and documented in PROJECT_PLAN.md: GitHub → Azure SWA Free → Cloudflare DNS → nabindhungana.com (www redirect); deployment prerequisites, GitHub/Azure/DNS/custom-domain+HTTPS setup, maintenance workflow, backup/rollback, costs, owner items, post-deploy checklist
 - [x] Phase 8 — final security review (appropriate for a static portfolio): 6 security headers verified (no X-Powered-By), HSTS + nosniff + X-Frame-Options SAMEORIGIN; `dangerouslySetInnerHTML` limited to static trusted JSON-LD; no user-submitted content (owner-authored MDX only); `mailto:` contact (no server form endpoint = no bot/spam/false-submission surface); no eval/document.write; clean secret scan; no production-browser source maps; external links `rel="noopener noreferrer"`; CSP decision documented (deferred to live host — see notes)
 - [x] Phase 8 — final validation (2026-09-02): lint clean, typecheck clean, production build green (16 routes), all 16 route checks pass (13× 200 incl /cv, 3× 404), security headers verified, dependency/secret/localhost/asset-path scans clean, CV serves with attachment + cache headers, robots/sitemap emit canonical domain, profile placeholder documented. Re-run (2026-09-02, post-JSON) with `curl --max-time 10` per route — all 16 pass; README now links MAINTENANCE.md; hang-free (Invoke-WebRequest avoided)
+- [x] Phase 9 (partial, 2026-09-03) — **Premium visual + theme refinements:** complete light/dark theme (refined design tokens, theme-aware borders everywhere, removed all `border-white`/`bg-white` hardcodes), hero improved (technical details panel, refined profile-photo container with glow + status line, skill category icons in cards), profile-photo fallback improved (initials badge in a ring with subtle glows + status dot), contact form upgraded (client-side validation with inline errors + `aria-invalid`/`aria-describedby`, optional subject label), project cards (category badge with accent color, theme-aware hover), expertise + experience + credentials pages (theme-aware cards/buttons, consistent chips), insights (theme-aware filters, improved empty state, author card with photo + clear filters), footer (added "Open to" column from centralized `CONTACT_TOPICS`), Navbar mobile-menu body-scroll lock, refined shadow/spotlight variables per theme, prose code/table/blockquote styling for articles
+- [x] Phase 9 (2026-09-03) — **Prefix QA harden pass (static/code-level):** semantic fix (nested `<article>` → `<div>` in insight detail — only the outer element remains an article), accessibility fix (ProfilePhoto initials fallback now exposed via `role="img"` + `aria-label` instead of hiding the whole container with `aria-hidden`), footer "Open to" internal links switched from `<a>` to `<Link>` (client-side nav, no full reload), SpotlightCard applied consistently to ProjectCard across Home + project-detail related (was only on Projects index), Experience domain cards now use the previously-dead `area` field to render a per-domain icon (Network/Server/ShieldCheck/Cloud), OG image derives the role line + domain from `SITE` constants (was hardcoded), `lib/insights.ts` adds a module-level cache for repeated build-time fs reads + `getInsightBySlug` refactored to read each file once (was reading twice). Validation: lint clean (52 files), typecheck clean, production build green (17 routes).
+- [x] Phase 9 (2026-09-03) — **Profile photo + expertise categories + feedback architecture:** profile photo added at `public/profile/profile.jpeg` and `.jpeg` added to the `ProfilePhoto` supported filenames (renders automatically in the Home hero, About sidebar, and insight author card; `object-cover` in `aspect-square` containers keeps it undistorted); `SKILL_CATEGORIES` reorganized from 4 → 5 broad professional categories (Networking; Systems & Infrastructure; Cloud & Virtualization; Cybersecurity; IT Operations & Technical Support) with vendor/product names (Azure, AWS, VMware ESXi) removed from core-skill lists and mapped to per-category icons on Home + Expertise (`Wrench` for IT Ops); Insights feedback/view architecture scaffolded — new `lib/feedback.ts` (`feedbackEnabled = false`, `getArticleMetrics`/`recordFeedback` typed adapter stubs, never fakes counts) and `components/insights/ArticleFeedback.tsx` (non-persistent useful/not-useful widget, `<fieldset>`/`<legend>` semantics, `aria-pressed`, wired on the insight detail page). Validation: lint clean (54 files), typecheck clean, production build green (17 routes).
+- [x] Phase 9 (2026-09-03) — **Feedback widget polish + honest-persistence verification:** verified `lib/feedback.ts` never claims persistent data (backend disabled, null metrics, no-op adapter); improved `ArticleFeedback` responsive behavior (label full-width on small screens so buttons group cleanly on their own row) and accessibility (`aria-live="polite"` status message announcing selection, e.g. "Thanks — marked as useful in this session only.", while the idle note clarifies feedback isn't stored until the backend phase); confirmed no view/fake counts are rendered anywhere. Validation: lint clean (54 files), typecheck clean, production build green (17 routes).
+- [x] Phase 9 (2026-09-03) — **Backend (serverless Azure Functions) — Contact + persistent article metrics:** implemented the production serverless backend in `api/` (Azure Functions v4, Node 20, TypeScript, separate/own deps: `@azure/functions`, `@azure/data-tables`, `@sendgrid/mail`). **Contact** (`POST /api/contact`): server-side validation & sanitization (control-char stripping blocks email header injection), anti-abuse (honeypot field, 3s minimum-submit timing check, per-IP in-memory rate limit 5/min, 32KB request-size limit), SendGrid delivery to `CONTACT_TO_EMAIL` from a verified `SENDGRID_FROM_EMAIL`; generic 502/503 errors, no internal leakage. **Metrics** (`POST /api/insights/views`, `POST /api/insights/reaction`, `GET /api/insights?slug=`): Azure Table Storage persistence with authoritative de-dup via row-key uniqueness (one view/article/day, one reaction/article, keyed by a random non-personal visitorId in localStorage); never fabricates counts and degrades gracefully (renders nothing) when the datastore is unconfigured. **Client**: `ContactForm` POSTs with loading/success/error states + mailto fallback; `lib/feedback.ts` rewritten as the client API layer (no secrets); `ArticleFeedback` persists reactions + shows real tallies; new `ArticleMetrics` shows a real view count. **Platform**: same-origin `/api` via SWA (no CORS config), no always-running server, no local DB, no hard-coded Azure/SendGrid ids or secrets (all env vars), `.env.example` placeholder names only, `.github/workflows/azure-static-web-apps.yml` scaffolded with `api_build_command: npm run build`. Validation: root lint/typecheck/build all green (17 routes); **api TypeScript compiles clean** (`tsc -p api/tsconfig.json` → `dist/functions/*.js` + `dist/lib/*.js`, ESM with `.js` import extensions, `main` → `dist/functions/*.js`).
 
 ---
 
@@ -582,9 +599,10 @@ Phase 3 (Content System) is complete. See Completed Items above.
 
 ### Phase 9: Deployment
 - [ ] Azure Static Web Apps setup
-- [ ] GitHub Actions workflow
+- [x] GitHub Actions workflow scaffold (`.github/workflows/azure-static-web-apps.yml`; validate against Azure-generated workflow on first deploy)
+- [ ] Provision backend services (SendGrid + Azure datastore) and set SWA app-settings
 - [ ] Custom domain configuration
-- [ ] Analytics integration
+- [ ] Analytics integration (optional; likely skipped — see roadmap)
 
 ---
 
@@ -616,9 +634,13 @@ Git repository  ── build (npm run build) ──▶  self-contained next star
   content and the app is `lib/insights.ts`.
 - **Build-time generated:** sitemap (incl. article URLs), robots.txt, JSON-LD
   (Person/WebSite/Article), OG metadata, security headers, fonts (self-hosted).
-- **No backend, no database, no authentication.** Contact stays a `mailto:` form.
-  No reaction/voting UI exists — a useful/not-useful feature would be added only with
-  a real persistence strategy, never faked.
+- **Serverless backend (added 2026-09-03).** A small `api/` folder of Azure
+  Functions (Node 20) now powers the Contact form (SendGrid delivery, validated +
+  anti-abuse) and article metrics (persistent views + Useful/Not-useful reactions
+  in Azure Table Storage). It is genuinely serverless (no always-running server,
+  no local/no separate database), keeps all secrets in server-side env vars, and
+  never fabricates counts — metrics are only shown when the backend returns real
+  numbers. The site itself remains static/SSG; interactivity is progressive.
 
 ### 2. How content is edited now
 
@@ -771,6 +793,19 @@ required to host.
 - **Static export (`output: "export"`) deliberately NOT used.** The `/cv` route handler (attachment streaming + 404) and route-handler/header support need the Next.js Node runtime. Target hosts (Azure SWA runtime, Vercel, Netlify, App Service, Container Apps) all support it — no re-architecture needed.
 - **Git-based editing is the recommended future remote workflow** (GitHub web editor/Codespaces/mobile Git client) — zero new infra, works from any device, and stays compatible with a future lightweight headless CMS. A DB/auth/admin dashboard was explicitly excluded as unnecessary complexity/security risk for a portfolio.
 
+## Phase 9 — Prefix QA harden pass (2026-09-03)
+
+Static/code-level hardening pass performed without running a server (production build independently verified first). Focus: genuine semantic, accessibility, consistency, and build-efficiency fixes.
+
+- **Semantic HTML:** insight detail page had a nested `<article>` (outer structure article + inner prose article). Changed the inner one to a `<div>` — only the outer element remains an `<article>`, which is now the correct single article landmark.
+- **Accessibility — ProfilePhoto fallback:** the initials-badge fallback container previously carried `aria-hidden="true"`, hiding the person's name context from screen readers. The container now uses `role="img"` + `aria-label` (`"{name} — initials placeholder"`); only genuinely decorative children (grid, glow orbs, status dot) remain `aria-hidden`. Decorative/status spans are hidden inside the `role="img"` context automatically.
+- **Internal navigation consistency:** the footer "Open to" list rendered `<a href="/contact">` per item, forcing a full page reload; now uses the app `<Link>` for client-side navigation (matches all other internal links in the footer/nav).
+- **Spotlight consistency:** `SpotlightCard` was applied to `ProjectCard` only on the Projects index. It's now applied consistently to the Home featured projects and the project-detail "Related projects" as well, so the pointer spotlight micro-interaction is uniform everywhere project cards render.
+- **Dead data field now used:** `ExperienceDomain.area` was typed and set on all four entries but never read. The Experience page now maps each area to a Lucide icon (Network / Server / ShieldCheck / Cloud) shown in the technical-domain cards — gives the field purpose and improves visual scannability.
+- **OG image derived from constants:** `app/opengraph-image.tsx` hardcoded "System & Network Engineer" and "nabindhungana.com"; both are now derived from `SITE.role` (first segment) and `SITE.url` (host), so the image stays in sync if the site identity/domain ever changes.
+- **Build-time fs efficiency (`lib/insights.ts`):** repeated `readAllInsights()` / `getAllSlugs()` / `getAllTags()` calls during a single build (sitemap, home, insights index, related) each re-read and re-parsed every MDX file. Added a module-level cache so the directory scan + file reads happen once per build. Also refactored `getInsightBySlug` to read each file once (it previously read the file twice — once for content/headings and again via `readInsightFile`), via a shared `readInsightWithContent` helper.
+- **Validation (2026-09-03):** `npm run lint` clean (52 files), `npm run typecheck` clean, `npm run build` green (17 routes, incl. 2 SSG project details + SSG insight route with zero prerendered posts). No running server started; static/code-level checks only.
+
 ## Phase 5 QA Verification Notes (2026-09-02)
 
 - Fresh QA run after killing a stale, idle node process (15h+, no listener) and confirming no production server was left running (port 3000 free). The two active `node` processes were `omniroute` (external dev tool), left untouched.
@@ -842,7 +877,7 @@ required to host.
 1. **No fabricated content** — all personal info, projects, experience, and credentials come from Nabin
 2. **No generic portfolio aesthetic** — no glowing gradients, particles, fake stats, or stock layouts
 3. **No Architecture/Lab page** — explicitly excluded
-4. **Dark theme only** — no light mode toggle
+4. **Light + dark theme** — full theme system with system-preference fallback, persistence, and no-FOUC startup script
 5. **Server components by default** — minimize client JS
 6. **MDX for content** — no external CMS
 7. **Azure Static Web Apps** — free tier, GitHub-linked deployment

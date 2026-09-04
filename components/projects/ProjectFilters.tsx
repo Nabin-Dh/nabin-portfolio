@@ -33,12 +33,13 @@ export function ProjectFilters() {
           <button
             key={item}
             type="button"
+            aria-pressed={category === item}
             onClick={() => setCategory(item)}
             className={cn(
               "h-9 rounded border px-3 text-sm transition-colors",
               category === item
-                ? "border-accent text-accent"
-                : "border-white/10 text-text-secondary hover:border-white/25 hover:text-text-primary",
+                ? "border-accent bg-accent-muted text-accent"
+                : "border-border-subtle text-text-secondary hover:border-border-strong hover:text-text-primary",
             )}
           >
             {item}
@@ -63,7 +64,9 @@ export function ProjectFilters() {
           </li>
         ))}
         {filtered.length === 0 ? (
-          <li className="text-text-secondary">No projects in this category.</li>
+          <li className="rounded-xl border border-dashed border-border-strong p-10 text-center text-text-secondary">
+            No projects in this category yet.
+          </li>
         ) : null}
       </ul>
     </div>

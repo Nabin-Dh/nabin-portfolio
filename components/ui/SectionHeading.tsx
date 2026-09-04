@@ -14,9 +14,12 @@ export function SectionHeading({
   className,
 }: SectionHeadingProps) {
   return (
-    <div className={cn("flex max-w-2xl flex-col gap-3", className)}>
+    <div className={cn("flex max-w-2xl flex-col gap-4", className)}>
       {eyebrow ? (
-        <p className="font-mono text-sm text-accent">{eyebrow}</p>
+        <p className="flex items-center gap-2 font-mono text-sm text-accent">
+          <span aria-hidden="true" className="h-px w-8 bg-accent/50" />
+          {eyebrow}
+        </p>
       ) : null}
       <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
         {title}

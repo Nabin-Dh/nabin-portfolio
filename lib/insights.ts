@@ -60,7 +60,9 @@ function extractHeadings(
   return headings;
 }
 
-function readInsightFile(slug: string): { slug: string; data: Insight } | null {
+function readInsightWithContent(
+  slug: string,
+): { slug: string; data: Insight; content: string } | null {
   if (slug.startsWith("_")) {
     return null;
   }
@@ -88,7 +90,12 @@ function readInsightFile(slug: string): { slug: string; data: Insight } | null {
     excerpt,
   };
 
-  return { slug, data: insight };
+  return { slug, data: insight, content };
+}
+
+function readInsightFile(slug: string): { slug: string; data: Insight } | null {
+  const result = readInsightWithContent(slug);
+  return result ? { slug: result.slug, data: result.data } : null;
 }
 
 function readAllInsights(): { slug: string; data: Insight }[] {
@@ -111,6 +118,15 @@ function readAllInsights(): { slug: string; data: Insight }[] {
   return insights;
 }
 
+let cache: { slug: string; data: Insight }[] | null = null;
+
+function getCachedInsights(): { slug: string; data: Insight }[] {
+  if (cache === null) {
+    cache = readAllInsights();
+  }
+  return cache;
+}
+
 function sortInsights(insights: Insight[]): Insight[] {
   return [...insights].sort((a, b) => {
     if (a.featured && !b.featured) {
@@ -124,11 +140,11 @@ function sortInsights(insights: Insight[]): Insight[] {
 }
 
 export function getAllInsights(): Insight[] {
-  return sortInsights(readAllInsights().map(({ data }) => data));
+  return sortInsights(getCachedInsights().map(({ data }) => data));
 }
 
 export function getAllSlugs(): string[] {
-  return readAllInsights().map(({ slug }) => slug);
+  return getCachedInsights().map(({ slug }) => slug);
 }
 
 export function findRelatedInsights(
@@ -164,29 +180,20 @@ export function findRelatedInsights(
 }
 
 export function getInsightBySlug(slug: string): InsightWithToc | null {
-  if (slug.startsWith("_")) {
-    return null;
-  }
-  const file = path.join(CONTENT_DIR, `${slug}.mdx`);
-  if (!fs.existsSync(file)) {
-    return null;
-  }
-  const raw = fs.readFileSync(file, "utf8");
-  const { content } = matter(raw);
-  const base = readInsightFile(slug);
-  if (!base) {
+  const result = readInsightWithContent(slug);
+  if (!result) {
     return null;
   }
   return {
-    ...base.data,
-    headings: extractHeadings(content),
-    related: findRelatedInsights(slug, base.data.tags),
+    ...result.data,
+    headings: extractHeadings(result.content),
+    related: findRelatedInsights(slug, result.data.tags),
   };
 }
 
 export function getAllTags(): string[] {
   const tags = new Set<string>();
-  for (const { data } of readAllInsights()) {
+  for (const { data } of getCachedInsights()) {
     for (const tag of data.tags) {
       tags.add(tag);
     }

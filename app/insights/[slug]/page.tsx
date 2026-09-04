@@ -1,12 +1,15 @@
 import { ArrowLeft, CalendarDays, Clock } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ArticleFeedback } from "@/components/insights/ArticleFeedback";
+import { ArticleMetrics } from "@/components/insights/ArticleMetrics";
 import { CopyLinkButton } from "@/components/insights/CopyLinkButton";
 import { InsightCard } from "@/components/insights/InsightCard";
 import { TableOfContents } from "@/components/insights/TableOfContents";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
+import { ProfilePhoto } from "@/components/ui/ProfilePhoto";
 import { TagList } from "@/components/ui/TagList";
 import { SITE } from "@/lib/constants";
 import { getAllSlugs, getInsightBySlug } from "@/lib/insights";
@@ -103,6 +106,7 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
                 <Clock className="h-3.5 w-3.5" />
                 {insight.readingTime}
               </span>
+              <ArticleMetrics slug={insight.slug} />
             </div>
 
             {insight.tags.length > 0 ? (
@@ -111,11 +115,11 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
               </div>
             ) : null}
 
-            <article className="prose prose-invert mt-8 max-w-none prose-headings:tracking-tight prose-headings:text-text-primary prose-p:text-text-secondary prose-li:text-text-secondary prose-a:no-underline prose-strong:text-text-primary prose-blockquote:border-accent prose-blockquote:text-text-secondary prose-code:font-mono">
+            <div className="prose mt-8 max-w-none prose-headings:scroll-mt-24 prose-headings:tracking-tight prose-headings:text-text-primary prose-p:text-text-secondary prose-li:text-text-secondary prose-a:no-underline prose-strong:text-text-primary prose-blockquote:border-accent prose-blockquote:text-text-secondary prose-code:font-mono">
               <Post />
-            </article>
+            </div>
 
-            <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.06] pt-8">
+            <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-border-subtle pt-8">
               <Link
                 href="/insights"
                 className="inline-flex items-center gap-1.5 font-mono text-sm text-text-secondary transition-colors hover:text-text-primary"
@@ -125,24 +129,36 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
               </Link>
               <CopyLinkButton />
             </div>
+
+            <div className="mt-8">
+              <ArticleFeedback articleSlug={insight.slug} />
+            </div>
           </article>
 
           <aside className="lg:col-span-4">
             <div className="sticky top-24 space-y-6">
               <TableOfContents headings={insight.headings} />
 
-              <div className="rounded border border-white/[0.06] bg-background-card p-5">
-                <p className="font-mono text-xs uppercase tracking-widest text-text-secondary">
-                  About the author
-                </p>
-                <p className="mt-3 text-sm leading-6 text-text-secondary">
-                  {SITE.name} — {SITE.role.split("|")[0].trim()}.
-                </p>
+              <div className="rounded-xl border border-border-subtle bg-background-card p-5 shadow-[var(--shadow-card)]">
+                <div className="flex items-center gap-3">
+                  <ProfilePhoto
+                    name={SITE.name}
+                    className="h-12 w-12 shrink-0 !rounded-full"
+                  />
+                  <div>
+                    <p className="font-semibold text-text-primary">
+                      {SITE.name}
+                    </p>
+                    <p className="text-sm text-text-secondary">
+                      {SITE.role.split("|")[0].trim()}
+                    </p>
+                  </div>
+                </div>
                 <Link
                   href="/about"
-                  className="mt-3 inline-block font-mono text-sm text-accent transition-colors hover:text-text-primary"
+                  className="mt-4 inline-block font-mono text-sm text-accent transition-colors hover:text-text-primary"
                 >
-                  read more...
+                  read more about me...
                 </Link>
               </div>
             </div>
@@ -150,7 +166,7 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
         </div>
 
         {insight.related.length > 0 ? (
-          <section className="mt-24 border-t border-white/[0.06] pt-12">
+          <section className="mt-24 border-t border-border-subtle pt-12">
             <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
               Related articles
             </h2>

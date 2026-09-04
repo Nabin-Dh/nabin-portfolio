@@ -12,6 +12,9 @@ const TEXT_PRIMARY = "#e5e7eb";
 const TEXT_SECONDARY = "#9ca3af";
 const ACCENT = "#3b82f6";
 
+const ROLE_LINE = SITE.role.split("|")[0].trim();
+const DOMAIN_LINE = SITE.url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
 function gridBackground() {
   const cells: string[] = [];
   const step = 48;
@@ -98,7 +101,7 @@ export default function OpengraphImage() {
             display: "flex",
           }}
         >
-          System &amp; Network Engineer
+          {ROLE_LINE}
         </div>
       </div>
 
@@ -114,7 +117,7 @@ export default function OpengraphImage() {
           color: TEXT_SECONDARY,
         }}
       >
-        <div style={{ display: "flex" }}>nabindhungana.com</div>
+        <div style={{ display: "flex" }}>{DOMAIN_LINE}</div>
         <div style={{ display: "flex", color: ACCENT }}>
           cloud · network · security
         </div>

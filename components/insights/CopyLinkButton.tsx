@@ -20,7 +20,7 @@ export function CopyLinkButton() {
     <button
       type="button"
       onClick={handleCopy}
-      className="inline-flex h-11 items-center gap-2 rounded border border-white/15 px-4 text-sm font-medium text-text-primary transition-colors hover:border-accent hover:text-accent"
+      className="inline-flex h-11 items-center gap-2 rounded-lg border border-border-subtle px-4 text-sm font-medium text-text-primary transition-colors hover:border-accent hover:text-accent"
       aria-live="polite"
     >
       {copied ? (

@@ -39,8 +39,8 @@ export default function CredentialsPage() {
           {CERTIFICATIONS.map((cert, index) => (
             <Reveal key={cert.title} delay={(index % 2) * 60}>
               <SpotlightCard>
-                <li className="group flex gap-4 rounded border border-white/[0.06] bg-background-card p-6 transition-colors hover:border-white/[0.12]">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-white/10 text-accent">
+                <li className="group flex gap-4 rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-accent">
                     <Award className="h-5 w-5" />
                   </div>
                   <div>
@@ -89,8 +89,8 @@ export default function CredentialsPage() {
               delay={(index % 2) * 60}
             >
               <SpotlightCard>
-                <li className="flex gap-4 rounded border border-white/[0.06] bg-background-card p-6 transition-colors hover:border-white/[0.12]">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-white/10 text-accent">
+                <li className="flex gap-4 rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-accent">
                     <GraduationCap className="h-5 w-5" />
                   </div>
                   <div>

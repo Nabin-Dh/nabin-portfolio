@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { CV_PATH, NAV_LINKS, SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -34,9 +35,19 @@ export function Navbar() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
+  useEffect(() => {
+    if (open) {
+      const previous = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = previous;
+      };
+    }
+  }, [open]);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-background/80 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+      <Container className="flex h-16 items-center justify-between gap-4">
         <Link
           href="/"
           className="flex items-baseline gap-2"
@@ -74,21 +85,27 @@ export function Navbar() {
               </Link>
             );
           })}
-          <Button asChild variant="outline" size="sm" className="ml-4">
-            <Link href={CV_PATH}>CV</Link>
-          </Button>
+          <div className="ml-3 flex items-center gap-2">
+            <ThemeToggle />
+            <Button asChild variant="outline" size="sm">
+              <Link href={CV_PATH}>CV</Link>
+            </Button>
+          </div>
         </nav>
 
-        <button
-          type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded text-text-secondary lg:hidden"
-          aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <X /> : <Menu />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="inline-flex h-11 w-11 items-center justify-center rounded text-text-secondary"
+            aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <X /> : <Menu />}
+          </button>
+        </div>
       </Container>
 
       <div
@@ -96,9 +113,9 @@ export function Navbar() {
         aria-hidden={!open}
         inert={!open}
         className={cn(
-          "overflow-hidden border-b border-white/[0.06] bg-background transition-all lg:hidden",
+          "overflow-hidden border-b border-border-subtle bg-background transition-all lg:hidden",
           open
-            ? "max-h-[400px] visible opacity-100"
+            ? "max-h-[520px] visible opacity-100"
             : "invisible max-h-0 border-b-0 opacity-0",
         )}
       >

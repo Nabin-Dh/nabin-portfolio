@@ -1,0 +1,25 @@
+{
+  "name": "nabin-portfolio-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Serverless API (Azure Functions, Node 20) for the Nabin Dhungana portfolio: contact delivery + article metrics.",
+  "type": "module",
+  "main": "dist/functions/*.js",
+  "scripts": {
+    "start": "func start",
+    "build": "tsc -p tsconfig.json",
+    "prestart": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.2.2",
+    "@azure/functions": "^4.6.0",
+    "@sendgrid/mail": "^8.1.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "typescript": "^5.6.3"
+  }
+}

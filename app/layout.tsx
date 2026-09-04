@@ -5,6 +5,7 @@ import "./globals.css";
 import { PageTransition } from "@/components/fx/PageTransition";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { ThemeScript } from "@/components/ui/ThemeScript";
 import { SITE } from "@/lib/constants";
 
 const personJsonLd = {
@@ -91,8 +92,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        <ThemeScript />
+      </head>
       <body className="flex min-h-full flex-col bg-background text-text-primary">
         <a
           href="#main-content"

@@ -12,7 +12,7 @@ export function TableOfContents({ headings }: { headings: TocItem[] }) {
   return (
     <nav
       aria-label="Table of contents"
-      className="rounded border border-white/[0.06] bg-background-card p-5"
+      className="rounded-xl border border-border-subtle bg-background-card p-5 shadow-[var(--shadow-card)]"
     >
       <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-text-secondary">
         <List className="h-3.5 w-3.5" />

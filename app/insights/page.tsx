@@ -35,8 +35,8 @@ export default function InsightsPage() {
 
       <Container className="py-16 sm:py-24">
         {insights.length === 0 ? (
-          <div className="flex flex-col items-center rounded border border-dashed border-white/[0.12] bg-background-card p-10 text-center sm:p-16">
-            <div className="flex h-12 w-12 items-center justify-center rounded border border-white/10 text-accent">
+          <div className="flex flex-col items-center rounded-2xl border border-dashed border-border-strong bg-background-card p-10 text-center sm:p-16">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border-subtle bg-accent-muted text-accent">
               <FileText className="h-5 w-5" />
             </div>
             <h2 className="mt-6 text-2xl font-semibold tracking-tight text-text-primary">

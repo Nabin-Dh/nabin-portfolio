@@ -27,3 +27,10 @@ export const NAV_LINKS = [
 ] as const;
 
 export const CV_PATH = "/cv";
+
+export const CONTACT_TOPICS = [
+  "Infrastructure roles",
+  "Networking or cloud engineering work",
+  "Consulting & collaboration",
+  "Architecture feedback",
+] as const;

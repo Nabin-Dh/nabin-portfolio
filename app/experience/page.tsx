@@ -1,11 +1,34 @@
-import { Briefcase, Wrench } from "lucide-react";
+import {
+  Briefcase,
+  Cloud,
+  type LucideIcon,
+  Network,
+  Server,
+  ShieldCheck,
+  Wrench,
+} from "lucide-react";
 import type { Metadata } from "next";
 import { Reveal } from "@/components/fx/Reveal";
 import { SpotlightCard } from "@/components/fx/SpotlightCard";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { Link } from "@/components/ui/Link";
 import { TagList } from "@/components/ui/TagList";
-import { EMPLOYMENT, EXPERIENCE_DOMAINS } from "@/lib/content";
+import { CV_PATH } from "@/lib/constants";
+import {
+  EMPLOYMENT,
+  EXPERIENCE_DOMAINS,
+  type ExperienceDomain,
+} from "@/lib/content";
+
+const AREA_ICONS: Record<ExperienceDomain["area"], LucideIcon> = {
+  network: Network,
+  systems: Server,
+  security: ShieldCheck,
+  cloud: Cloud,
+  infrastructure: Server,
+};
 
 export const metadata: Metadata = {
   title: "Experience",
@@ -32,7 +55,8 @@ export default function ExperiencePage() {
             Professional employment
           </h2>
         </Reveal>
-        <ol className="relative mt-8 space-y-12 border-l border-white/[0.06] pl-6">
+
+        <ol className="relative mt-8 space-y-12 border-l border-border-subtle pl-6">
           {EMPLOYMENT.map((role, index) => (
             <Reveal key={`${role.company}-${role.start}`} delay={index * 60}>
               <li className="relative">
@@ -51,6 +75,14 @@ export default function ExperiencePage() {
                 <p className="mt-4 max-w-2xl leading-7 text-text-secondary">
                   {role.summary}
                 </p>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Button asChild variant="outline" size="sm">
+                    <Link href="/expertise">View expertise</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={CV_PATH}>Download CV</Link>
+                  </Button>
+                </div>
               </li>
             </Reveal>
           ))}
@@ -62,9 +94,8 @@ export default function ExperiencePage() {
             Technical experience
           </h2>
           <p className="mt-3 max-w-2xl leading-7 text-text-secondary">
-            Domains where I apply hands-on technical experience in day-to-day
-            engineering — separate from, and complementary to, the employment
-            record above.
+            Domains where I apply hands-on technical experience — separate from,
+            and complementary to, the employment record above.
           </p>
         </Reveal>
 
@@ -72,10 +103,21 @@ export default function ExperiencePage() {
           {EXPERIENCE_DOMAINS.map((domain, index) => (
             <Reveal key={domain.title} delay={(index % 2) * 60}>
               <SpotlightCard>
-                <div className="h-full rounded border border-white/[0.06] bg-background-card p-6 transition-colors hover:border-white/[0.12] sm:p-8">
-                  <p className="font-mono text-xs uppercase tracking-widest text-accent">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
+                <div className="h-full rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)] sm:p-8">
+                  <div className="flex items-center justify-between">
+                    <p className="font-mono text-xs uppercase tracking-widest text-accent">
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    {(() => {
+                      const AreaIcon = AREA_ICONS[domain.area];
+                      return (
+                        <AreaIcon
+                          aria-hidden="true"
+                          className="h-5 w-5 text-accent"
+                        />
+                      );
+                    })()}
+                  </div>
                   <h3 className="mt-3 text-xl font-semibold tracking-tight text-text-primary">
                     {domain.title}
                   </h3>

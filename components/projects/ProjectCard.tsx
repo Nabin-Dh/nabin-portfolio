@@ -6,6 +6,11 @@ import { TagList } from "@/components/ui/TagList";
 import type { Project } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
+const CATEGORY_STYLES: Record<Project["category"], string> = {
+  networking: "bg-accent-muted text-accent",
+  cloud: "bg-accent-muted text-accent",
+};
+
 export function ProjectCard({
   project,
   className,
@@ -16,7 +21,7 @@ export function ProjectCard({
   return (
     <Card
       className={cn(
-        "group flex h-full flex-col p-6 transition-colors hover:border-white/[0.12] sm:p-7",
+        "group flex h-full flex-col p-6 transition-colors hover:border-border-strong sm:p-7",
         className,
       )}
     >
@@ -24,7 +29,12 @@ export function ProjectCard({
         <h2 className="text-xl font-semibold tracking-tight text-text-primary">
           {project.title}
         </h2>
-        <span className="mt-1 shrink-0 font-mono text-xs uppercase tracking-widest text-text-secondary">
+        <span
+          className={cn(
+            "mt-1 shrink-0 rounded-md border border-border-subtle px-2 py-0.5 font-mono text-[11px] uppercase tracking-widest",
+            CATEGORY_STYLES[project.category],
+          )}
+        >
           {project.category}
         </span>
       </div>

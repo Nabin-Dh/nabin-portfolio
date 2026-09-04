@@ -46,7 +46,7 @@ export function InsightFilters({ insights, tags }: InsightFiltersProps) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search articles…"
-            className="h-11 w-full rounded border border-white/10 bg-background-card pl-10 pr-10 text-text-primary outline-none transition-colors focus:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent"
+            className="h-11 w-full rounded-lg border border-border-subtle bg-background-card pl-10 pr-10 text-text-primary outline-none transition-colors focus:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent"
           />
           {query ? (
             <button
@@ -68,12 +68,13 @@ export function InsightFilters({ insights, tags }: InsightFiltersProps) {
             </span>
             <button
               type="button"
+              aria-pressed={!selectedTag}
               onClick={() => setSelectedTag(null)}
               className={cn(
-                "h-9 rounded border px-3 text-sm transition-colors",
+                "h-9 rounded-lg border px-3 text-sm transition-colors",
                 !selectedTag
-                  ? "border-accent text-accent"
-                  : "border-white/10 text-text-secondary hover:border-white/25 hover:text-text-primary",
+                  ? "border-accent bg-accent-muted text-accent"
+                  : "border-border-subtle text-text-secondary hover:border-border-strong hover:text-text-primary",
               )}
             >
               All
@@ -82,14 +83,15 @@ export function InsightFilters({ insights, tags }: InsightFiltersProps) {
               <button
                 key={tag}
                 type="button"
+                aria-pressed={selectedTag === tag}
                 onClick={() =>
                   setSelectedTag((current) => (current === tag ? null : tag))
                 }
                 className={cn(
-                  "h-9 rounded border px-3 text-sm transition-colors",
+                  "h-9 rounded-lg border px-3 text-sm transition-colors",
                   selectedTag === tag
-                    ? "border-accent text-accent"
-                    : "border-white/10 text-text-secondary hover:border-white/25 hover:text-text-primary",
+                    ? "border-accent bg-accent-muted text-accent"
+                    : "border-border-subtle text-text-secondary hover:border-border-strong hover:text-text-primary",
                 )}
               >
                 {tag}
@@ -106,13 +108,29 @@ export function InsightFilters({ insights, tags }: InsightFiltersProps) {
         {filtered.length > 0 ? resultLabel : "No articles match."}
       </p>
 
-      <ul className="mt-6 grid gap-6 lg:grid-cols-2">
-        {filtered.map((insight) => (
-          <li key={insight.slug}>
-            <InsightCardBody insight={insight} />
-          </li>
-        ))}
-      </ul>
+      {filtered.length > 0 ? (
+        <ul className="mt-6 grid gap-6 lg:grid-cols-2">
+          {filtered.map((insight) => (
+            <li key={insight.slug}>
+              <InsightCardBody insight={insight} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="mt-8 rounded-2xl border border-dashed border-border-strong bg-background-card/60 p-10 text-center">
+          <p className="text-text-primary">No articles match your search.</p>
+          <button
+            type="button"
+            onClick={() => {
+              setQuery("");
+              setSelectedTag(null);
+            }}
+            className="mt-3 font-mono text-sm text-accent transition-colors hover:text-text-primary"
+          >
+            clear filters
+          </button>
+        </div>
+      )}
     </div>
   );
 }

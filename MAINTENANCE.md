@@ -39,6 +39,9 @@ When you open that link, you will see a list of folders and files:
 - `lib/` — the "settings" where your profile data, projects, and expertise live.
 - `content/insights/` — where your articles (Insights) live.
 - `public/` — where you put images: your CV PDF and your profile photo.
+- `api/` — the small "server" that receives contact messages and counts article
+  reactions/views. Run by Azure automatically; **you don't normally touch it.**
+- `.github/` — the automatic build-and-publish instructions. **Do not edit.**
 - `MAINTENANCE.md` and `README.md` — these instructions.
 
 To **edit** any file: click on it, then click the **pencil icon** near the top
@@ -289,9 +292,11 @@ Deployment is hands-free.
   CV, the photo, any file in `content/`, `lib/`, or `public/`) goes through the
   automatic rebuild as described above. You don't do anything extra — the rebuild
   is automatic on every commit.
-- **Nothing is "instant" without a rebuild.** There is no database and no
-  admin panel, so there is no "save and it appears immediately" route. Every
-  change travels through the GitHub → build → deploy pipeline.
+- **Nothing is "instant" without a rebuild.** There is no admin panel, so there
+  is no "save and it appears immediately" route for your content. Every *content*
+  change travels through the GitHub → build → deploy pipeline. (The only things
+  that update instantly are visitor metrics like article views/reactions — those
+  are written by the serverless API as they happen, not through a rebuild.)
 - **Nothing about hosting/security settings** (domain, HTTPS, DNS) requires a
   rebuild — those are configured once at the hosting provider, not per change.
 
@@ -373,5 +378,214 @@ is meant to be public and is fine to commit.
 site looks and is built. A developer handles those — a normal content edit never
 needs them.
 
-The full technical architecture, deployment setup, and roadmap live in
+---
+
+## 17. Theme (light / dark) — how it works
+
+The site supports **light, dark, and automatic (system) themes**. You don't
+normally need to touch anything — here's what's going on and how to change it.
+
+- **Automatic by default:** if you've never chosen a theme, the site follows your
+  device/browser's light-or-dark setting.
+- **Manual override:** the button in the top-right of the navigation toggles
+  between light and dark, and remembers your choice for next time.
+- **No coding needed:** there's no content setting for the theme; it's part of
+  the design system (`app/globals.css` + `components/ui/ThemeToggle.tsx`). A
+  developer would only change it if you wanted a different color palette.
+
+All pages (home, about, expertise, experience, projects, insights, credentials,
+contact) are designed to look correct in both themes. The ideas behind this:
+
+- **Colors come from shared "design tokens"** defined once in `app/globals.css`
+  (light values under `:root`, dark values under `[data-theme="dark"]`). Every
+  card, border, text, and background reads those tokens, so one change updates
+  the whole site.
+- **No flash of the wrong theme:** a tiny startup script (`ThemeScript`) reads
+  your saved/saved/system preference before the page paints, so the correct
+  theme appears immediately.
+- **Reduced motion:** if your device asks for less animation (a system
+  accessibility setting), the site's scroll reveals, highlights, and transitions
+  are turned off automatically.
+
+---
+
+## 18. Contact form — how it works now
+
+The Contact form now submits to a small serverless API (in the `api/` folder)
+that **emails you the message directly** through SendGrid. When a visitor fills
+the form in and presses "Send message", the message is delivered to your inbox —
+no email app on their side is needed, and no visitor data is stored.
+
+What the backend does automatically:
+
+- **Validates** the message (name, valid email, non-empty message) and rejects
+  obviously bad input.
+- **Blocks spam** quietly: a hidden "honeypot" field traps bots, an instant
+  submit is ignored, and there's a per-visitor rate limit. The visitor gets no
+  error for these — bots are simply silently accepted-and-ignored.
+- **Emails you** via SendGrid from a verified sender address to your `CONTACT_TO_EMAIL`.
+
+If anything isn't configured yet, the form shows a friendly "Contact delivery is
+not configured yet" style message and still offers your direct email address as
+a fallback — so the site never appears "broken".
+
+The email address you receive messages at is controlled by the setting
+`CONTACT_TO_EMAIL` (see section 20). Your public email shown elsewhere on the
+site is set in `lib/constants.ts` (the `SITE.email` value).
+
+## 19. Article reactions and views — how they work now
+
+Article pages now show two genuinely-persisted, honest metrics:
+
+- **Views** — a small "views" number next to the date/read-time on each article.
+- **Reactions** — "Useful / Not useful" buttons on each article, with the real
+  tallies shown next to them.
+
+How it works, and what it deliberately does:
+
+- Counts are **real**, stored in an Azure datastore (Table Storage / Cosmos
+  Table API) by the same serverless API. The site **never** shows a made-up
+  number. If the metrics backend isn't configured or is unreachable, the site
+  simply shows **no** view count and no reaction tallies — it never invents them.
+- **Refreshes aren't over-counted.** A visitor's browser session is given a
+  random (non-personal) id, and the API counts **at most one view per article
+  per day** and **one reaction per article** per that id. Refreshing a page does
+  not keep inflating the counter.
+- **Privacy-conscious.** Only that random id and a date are stored — no name,
+  email, IP address, or device fingerprint. The site tracks nothing else.
+
+You read these numbers with the Azure portal or the Table Storage explorer — see
+section 24 ("Understanding metrics"). There is no owner notification for views
+or reactions (that would produce noise, not signal); these are aggregate
+counters you check when you want to.
+
+---
+
+## 20. Environment variables (the settings the site's server uses)
+
+Everything secret and configurable about the backend is controlled by
+**environment variables** — a list of *name = value* settings attached to the
+Azure Static Web App. **None of these values belong inside a code file.** They
+are entered once in the Azure portal (and optionally in a `.env` file for local
+testing).
+
+The API reads these:
+
+| Variable | What it's for | Required? |
+|---|---|---|
+| `AZURE_TABLES_CONNECTION_STRING` | Connection string for the datastore that holds article views/reactions. | Required for metrics |
+| `SENDGRID_API_KEY` | Secret key that lets the site send email through SendGrid. | Required for contact |
+| `SENDGRID_FROM_EMAIL` | The verified sender address emails go out from. | Required for contact |
+| `SENDGRID_FROM_NAME` | Display name shown as the sender (e.g. "Nabin Dhungana"). | Optional |
+| `CONTACT_TO_EMAIL` | The inbox where contact messages arrive (default `nabinndh@gmail.com`). | Optional |
+
+There is also one **build-time** variable used only when building the front end
+(not secret): `NEXT_PUBLIC_SITE_URL` (the site's canonical URL). Never prefix a
+secret with `NEXT_PUBLIC_` — only non-secret, front-end values use that prefix.
+
+> **Never** commit real values. The file `.env.example` shows only safe, empty
+> placeholder names. Real secrets live only in Azure (and optionally a local
+> `.env` that is git-ignored).
+
+## 21. Set up SendGrid (one time, for contact email)
+
+Contact messages are delivered with **SendGrid** (Twilio's email service). You
+need a free SendGrid account and a verified sender.
+
+1. **Create a SendGrid account** at sendgrid.com (click "Start for free").
+2. **Verify a sender.** In SendGrid go to **Settings → Sender Authentication**.
+   The simplest is a **Single Sender Verification**: enter an email address you
+   control (e.g. `nabin@your-domain.com` or your Gmail) and click the
+   confirmation link they email you.
+3. **Create an API key.** Go to **Settings → API Keys**, click **Create API
+   Key**, name it (e.g. `portfolio-contact`), choose **Restricted Access** (a
+   key that can only *Send*), and save the full key — it is shown once only.
+4. **Add the settings in Azure.** In the Azure portal open your Static Web App →
+   **Configuration → Application settings**, and add:
+   - `SENDGRID_API_KEY` = the key from step 3
+   - `SENDGRID_FROM_EMAIL` = the address you verified in step 2
+   - `SENDGRID_FROM_NAME` = your name (optional)
+   - `CONTACT_TO_EMAIL` = the inbox you want to receive messages in
+   Save, then wait a moment for the deployment to pick them up.
+
+## 22. Set up the Azure datastore (one time, for views/reactions)
+
+Article views and reactions are stored in **Azure Table Storage** (the simplest,
+cheapest option; the same connection string also works with Cosmos DB's Table
+API). It needs no "server" — Azure manages it.
+
+1. **Create a storage account.** In the Azure portal choose **Create a resource
+   → Storage account** (any standard account type is fine; the free/basic tiers
+   work for a portfolio).
+2. **Copy the connection string.** Open the storage account → **Security +
+   networking → Access keys**, and copy either connection string.
+3. **Add the setting in Azure.** In your Static Web App → **Configuration →
+   Application settings**, add `AZURE_TABLES_CONNECTION_STRING` = the string from
+   step 2 and save. The first article view/reaction will create the table and
+   rows automatically — you don't need to create tables by hand.
+
+For Cosmos DB instead: create a Cosmos DB account with the **Table API**, and use
+its table connection string in the same `AZURE_TABLES_CONNECTION_STRING` setting.
+
+## 23. Testing the API locally (for a developer)
+
+A developer can run the API on their own computer to test it before deploying:
+
+1. Install the [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local).
+2. In the `api/` folder, copy `local.settings.example.json` to `local.settings.json`
+   and put in real (or test) placeholder values for the connection string and
+   SendGrid key.
+3. Run `npm install` then `npm run start` inside `api/`.
+4. The endpoints are then available locally at `http://localhost:7071/api/...`
+   (`/api/contact`, `/api/insights/views`, `/api/insights/reaction`,
+   `/api/insights?slug=...`).
+
+Local testing is optional and is for developers only — you never need it to
+maintain the live site.
+
+## 24. Understanding article metrics
+
+There is no admin dashboard for metrics — the numbers are already shown on each
+article page (views next to the date, and the Useful/Not-useful tallies), and
+the underlying rows are stored in your datastore.
+
+To inspect the raw rows:
+
+- **Azure portal:** open your storage account → **Storage browser → Tables →
+  `insightsMetrics`**. Each article has:
+  - rows whose name starts with `views:<article-slug>` — one row per unique
+    count; each row is one view (a visitor+day).
+  - rows whose name starts with `reactions:<article-slug>` — one row per unique
+    reaction, with a `vote` column of `helpful` or `not-helpful`.
+- **Interpreting:** the number of `views:` rows for an article = its view count;
+  the number of `reactions:` rows whose `vote` is `helpful` = the Useful count
+  (and likewise for `not-helpful`).
+
+These counts are deliberately **deduplicated** (one view per visitor per day, one
+reaction per visitor per article), so they reflect distinct readers, not page
+refreshes.
+
+## 25. Deployment & rollback
+
+Deployment is fully automatic via GitHub Actions (see the `.github/workflows/`
+file): every commit to the `main` branch triggers a build of the front end and
+the `api/` functions, then publishes both to Azure Static Web Apps. You do not
+run anything manually.
+
+- **Deploy a change:** just commit it on GitHub — see section 1.
+- **Roll back a bad change:** use the same "History → Restore this version"
+  steps as section 14. That reverts the files and pushes an automatic rebuild.
+  The already-published version keeps serving until the rebuild finishes. If the
+  rollout fails, the previous good deployment stays live — a failed build never
+  blanks the site.
+- **Config-only changes** (new SendGrid key, storage settings) are made in Azure
+  application settings and do not require a code commit; Azure picks them up on
+  the next deploy or immediately.
+
+> **First deployment note:** the exact `app_location` / `api_location` values in
+> the workflow must be confirmed against the workflow Azure auto-generates when
+> you create the Static Web App resource. If the API doesn't appear after the
+> first deploy, compare the generated workflow with the one in `.github/`.
+
+The full technical architecture and step-by-step roadmap live in
 `PROJECT_PLAN.md`.

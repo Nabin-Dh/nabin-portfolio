@@ -1,4 +1,11 @@
-import { Boxes, Cloud, Network, Server, ShieldCheck } from "lucide-react";
+import {
+  Boxes,
+  Cloud,
+  Network,
+  Server,
+  ShieldCheck,
+  Wrench,
+} from "lucide-react";
 import type { Metadata } from "next";
 import { Reveal } from "@/components/fx/Reveal";
 import { SpotlightCard } from "@/components/fx/SpotlightCard";
@@ -14,7 +21,7 @@ import {
 export const metadata: Metadata = {
   title: "Expertise",
   description:
-    "Technical expertise of Nabin Dhungana across networking, systems administration, cloud (Azure, AWS), and cybersecurity.",
+    "Technical expertise of Nabin Dhungana across networking, systems & infrastructure, cloud & virtualization, and cybersecurity.",
   alternates: {
     canonical: "/expertise",
   },
@@ -30,9 +37,10 @@ const CATEGORY_ICONS: Record<ProfessionalDomain["icon"], typeof Network> = {
 
 const SKILL_CATEGORY_ICONS: Record<string, typeof Network> = {
   Networking: Network,
-  Systems: Server,
-  Cloud: Cloud,
+  "Systems & Infrastructure": Server,
+  "Cloud & Virtualization": Cloud,
   Cybersecurity: ShieldCheck,
+  "IT Operations & Technical Support": Wrench,
 };
 
 export default function ExpertisePage() {
@@ -61,10 +69,10 @@ export default function ExpertisePage() {
             return (
               <Reveal key={domain.title} delay={(index % 2) * 60}>
                 <SpotlightCard>
-                  <section className="group h-full rounded border border-white/[0.06] bg-background-card p-6 transition-colors hover:border-white/[0.12] sm:p-8">
+                  <section className="group h-full rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)] sm:p-8">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-white/10 text-accent">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-accent">
                           <Icon className="h-5 w-5" />
                         </div>
                         <h3 className="text-xl font-semibold tracking-tight text-text-primary">
@@ -103,9 +111,9 @@ export default function ExpertisePage() {
             return (
               <Reveal key={category.title} delay={index * 60}>
                 <SpotlightCard>
-                  <section className="group h-full rounded border border-white/[0.06] bg-background-card p-6 transition-colors hover:border-white/[0.12] sm:p-8">
+                  <section className="group h-full rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)] sm:p-8">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-white/10 text-accent">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-accent">
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="text-xl font-semibold tracking-tight text-text-primary">

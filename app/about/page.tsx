@@ -62,13 +62,51 @@ export default function AboutPage() {
                 <span className="font-medium text-text-primary">
                   {PROFILE.company}
                 </span>{" "}
-                (starting {PROFILE.roleStart}). Long-term focus is Cloud
-                Solutions Architecture — designing reliable, secure, and
-                scalable infrastructure.
+                (since {PROFILE.roleStart}). Long-term focus is Cloud Solutions
+                Architecture — designing reliable, secure, and scalable
+                infrastructure.
               </p>
             </Reveal>
 
             <Reveal delay={80}>
+              <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
+                Technical interests
+              </h2>
+              <ul className="mt-6 grid gap-3">
+                {[
+                  {
+                    title: "Network engineering",
+                    text: "Routing, switching, and access-layer security that keep enterprises connected.",
+                  },
+                  {
+                    title: "Systems administration",
+                    text: "Windows & Linux server operations across physical and virtualized environments.",
+                  },
+                  {
+                    title: "Cloud infrastructure",
+                    text: "Designing secure, scalable Azure infrastructure with a cloud-architecture mindset.",
+                  },
+                  {
+                    title: "Cybersecurity",
+                    text: "Hardening systems and networks with defense-in-depth and least privilege.",
+                  },
+                ].map((item) => (
+                  <li
+                    key={item.title}
+                    className="rounded-lg border border-border-subtle bg-background-card/60 px-4 py-3"
+                  >
+                    <p className="font-medium text-text-primary">
+                      {item.title}
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-text-secondary">
+                      {item.text}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            <Reveal delay={100}>
               <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
                 Professional domains
               </h2>
@@ -76,7 +114,7 @@ export default function AboutPage() {
                 {DOMAINS.map((domain) => (
                   <li key={domain.title}>
                     <SpotlightCard>
-                      <div className="h-full rounded border border-white/[0.06] bg-background-card p-5 transition-colors hover:border-white/[0.12]">
+                      <div className="h-full rounded-xl border border-border-subtle bg-background-card p-5 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)]">
                         <h3 className="text-base font-semibold text-text-primary">
                           {domain.title}
                         </h3>
@@ -119,7 +157,7 @@ export default function AboutPage() {
                 {EDUCATION.map((item) => (
                   <li
                     key={`${item.institution}-${item.title}`}
-                    className="rounded border border-white/[0.06] bg-background-card p-5"
+                    className="rounded-xl border border-border-subtle bg-background-card p-5 shadow-[var(--shadow-card)]"
                   >
                     <p className="font-mono text-xs uppercase tracking-widest text-accent">
                       {item.type}
@@ -151,9 +189,12 @@ export default function AboutPage() {
           <aside className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               <Reveal>
-                <div className="rounded border border-white/[0.06] bg-background-card p-6">
-                  <ProfilePhoto className="aspect-square w-full" />
-                  <dl className="mt-5 space-y-6">
+                <div className="rounded-2xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)]">
+                  <ProfilePhoto
+                    name={PROFILE.name}
+                    className="aspect-square w-full"
+                  />
+                  <dl className="mt-6 space-y-6">
                     <div>
                       <dt className="font-mono text-xs uppercase tracking-widest text-text-secondary">
                         Role
