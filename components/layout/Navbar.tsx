@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { CloudLogo } from "@/components/ui/CloudLogo";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -50,10 +51,10 @@ export function Navbar() {
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link
           href="/"
-          className="flex items-baseline gap-2"
+          className="flex items-center gap-2"
           onClick={() => setOpen(false)}
         >
-          <span className="font-mono text-sm text-accent">&gt;_</span>
+          <CloudLogo size={28} />
           <span className="text-lg font-semibold tracking-tight">
             {SITE.name}
           </span>

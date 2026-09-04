@@ -41,7 +41,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE.name} — ${SITE.role}`,
+    default: SITE.name,
     template: `%s — ${SITE.name}`,
   },
   description: SITE.description,
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} — ${SITE.role}`,
+    title: SITE.name,
     description: SITE.description,
     images: [
       {
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} — ${SITE.role}`,
+    title: SITE.name,
     description: SITE.description,
     images: ["/opengraph-image"],
   },

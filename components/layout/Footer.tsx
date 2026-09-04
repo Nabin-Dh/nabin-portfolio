@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
+import { CloudLogo } from "@/components/ui/CloudLogo";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
 import { CONTACT_TOPICS, CV_PATH, NAV_LINKS, SITE } from "@/lib/constants";
@@ -12,10 +13,10 @@ export function Footer() {
         <div className="max-w-sm">
           <Link
             href="/"
-            className="inline-flex items-baseline gap-2"
+            className="inline-flex items-center gap-2"
             aria-label={`${SITE.name} — home`}
           >
-            <span className="font-mono text-sm text-accent">&gt;_</span>
+            <CloudLogo size={24} />
             <span className="text-base font-semibold tracking-tight">
               {SITE.name}
             </span>

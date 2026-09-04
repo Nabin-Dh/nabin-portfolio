@@ -32,7 +32,7 @@ import {
 import { getAllInsights } from "@/lib/insights";
 
 export const metadata: Metadata = {
-  title: SITE.headline,
+  title: SITE.name,
   description: SITE.description,
   alternates: {
     canonical: "/",

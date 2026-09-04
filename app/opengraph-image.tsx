@@ -75,12 +75,40 @@ export default function OpengraphImage() {
             display: "flex",
             alignItems: "center",
             gap: 12,
-            fontFamily: "monospace",
-            fontSize: 28,
-            color: ACCENT,
           }}
         >
-          &gt;_
+          <div
+            style={{ position: "relative", width: 48, height: 36, display: "flex" }}
+          >
+            <svg
+              viewBox="0 0 38 28"
+              width={48}
+              height={36}
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M9.5 19.5C6.5 19.5 4 17.2 4 14.2c0-2.4 1.5-4.5 3.7-5.4C8 5.4 10.2 3.5 13 3.5c2.2 0 4.1 1.1 5.3 2.7C19 4.7 20.5 4 22.2 4c3.2 0 5.8 2.5 5.8 5.6 0 .2 0 .5-.1.7A5.3 5.3 0 0 1 31 14c0 3-2.5 5.5-5.5 5.5H9.5Z"
+                fill={ACCENT}
+              />
+            </svg>
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                fontSize: 16,
+                fontWeight: 700,
+                fontFamily: "sans-serif",
+                letterSpacing: "-0.04em",
+              }}
+            >
+              ND
+            </div>
+          </div>
         </div>
         <div
           style={{

@@ -4,6 +4,7 @@ import { InsightFilters } from "@/components/insights/InsightFilters";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
+import { SITE } from "@/lib/constants";
 import { getAllInsights, getAllTags } from "@/lib/insights";
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "Insights — Nabin Dhungana",
+    title: SITE.name,
     description:
       "Technical write-ups on networking, systems, cloud, and security.",
   },
