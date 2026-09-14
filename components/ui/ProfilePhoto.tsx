@@ -19,7 +19,8 @@ function findProfilePhoto(): string | null {
   }
   for (const filename of FILENAMES) {
     if (fs.existsSync(path.join(PROFILE_DIR, filename))) {
-      return `/profile/${filename}`;
+      const basePath = process.env.PAGES_BASE_PATH ?? "";
+      return `${basePath}/profile/${filename}`;
     }
   }
   return null;
