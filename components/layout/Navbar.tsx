@@ -4,12 +4,11 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/Button";
 import { CloudLogo } from "@/components/ui/CloudLogo";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { CV_PATH, NAV_LINKS, SITE } from "@/lib/constants";
+import { NAV_LINKS, SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 function isActivePath(pathname: string, href: string) {
@@ -88,9 +87,6 @@ export function Navbar() {
           })}
           <div className="ml-3 flex items-center gap-2">
             <ThemeToggle />
-            <Button asChild variant="outline" size="sm">
-              <Link href={CV_PATH}>CV</Link>
-            </Button>
           </div>
         </nav>
 
@@ -139,16 +135,6 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="mt-2 self-start"
-          >
-            <Link href={CV_PATH} onClick={() => setOpen(false)}>
-              Download CV
-            </Link>
-          </Button>
         </Container>
       </div>
     </header>

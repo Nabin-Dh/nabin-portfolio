@@ -229,6 +229,22 @@ body {
   }
 }
 
+/* Technology marquee (paired with <TechnologyMarquee />) */
+.marquee-track {
+  animation: marquee-scroll 40s linear infinite;
+}
+
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Custom scrollbar (webkit) */
 @media (min-width: 768px) {
   ::-webkit-scrollbar {
@@ -318,5 +334,16 @@ body {
   }
   .page-enter {
     animation: none;
+  }
+  .marquee {
+    overflow: visible;
+  }
+  .marquee-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+  }
+  .marquee-group[aria-hidden="true"] {
+    display: none;
   }
 }

@@ -21,7 +21,8 @@ import { Link } from "@/components/ui/Link";
 import { ProfilePhoto } from "@/components/ui/ProfilePhoto";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TagList } from "@/components/ui/TagList";
-import { CV_PATH, SITE } from "@/lib/constants";
+import { TechnologyMarquee } from "@/components/ui/TechnologyMarquee";
+import { SITE } from "@/lib/constants";
 import {
   CERTIFICATIONS,
   DOMAINS,
@@ -54,6 +55,23 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <Hero />
+
+      <section className="border-t border-border-subtle">
+        <Container className="py-14 sm:py-20">
+          <Reveal>
+            <SectionHeading
+              eyebrow="/stack"
+              title="Working stack."
+              description="The networks, systems, cloud platforms, and tooling I work with day to day."
+            />
+          </Reveal>
+          <div className="mt-10">
+            <Reveal>
+              <TechnologyMarquee />
+            </Reveal>
+          </div>
+        </Container>
+      </section>
 
       <section className="border-t border-border-subtle">
         <Container className="py-16 sm:py-24">
@@ -323,7 +341,7 @@ function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
-              Available for opportunities
+              Open to collaboration &amp; consulting
             </span>
           </Reveal>
           <Reveal delay={80}>
@@ -349,9 +367,6 @@ function Hero() {
                   <Link href="/contact">Get in touch</Link>
                 </Button>
               </Magnetic>
-              <Button asChild variant="outline" size="lg">
-                <Link href={CV_PATH}>Download CV</Link>
-              </Button>
               <a
                 href={SITE.socials.github}
                 target="_blank"

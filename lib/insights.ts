@@ -147,6 +147,27 @@ export function getAllSlugs(): string[] {
   return getCachedInsights().map(({ slug }) => slug);
 }
 
+/**
+ * All `.mdx` slugs in the content dir — including private `_`-prefixed files.
+ *
+ * Under static export (`output: "export"`) a dynamic route must generate at
+ * least one page. Published content may be empty, so we still generate params
+ * for the private template: its route calls `notFound()` (getInsightBySlug
+ * rejects `_`-prefixed slugs), emitting a 404 page and keeping the "private
+ * files are never published" convention intact. When real articles exist they
+ * are generated normally.
+ */
+export function getAllExportSlugs(): string[] {
+  if (!fs.existsSync(CONTENT_DIR)) {
+    return [];
+  }
+  return fs
+    .readdirSync(CONTENT_DIR)
+    .filter((file) => file.endsWith(".mdx"))
+    .map((file) => file.replace(/\.mdx$/, ""))
+    .sort();
+}
+
 export function findRelatedInsights(
   slug: string,
   tags: string[],

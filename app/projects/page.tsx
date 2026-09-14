@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Infrastructure projects by Nabin Dhungana — enterprise networking and Azure cloud architecture designs.",
+    "Infrastructure projects I've designed and built — enterprise networking and Azure cloud architecture.",
   alternates: {
     canonical: "/projects",
   },

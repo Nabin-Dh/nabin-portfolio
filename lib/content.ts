@@ -101,23 +101,21 @@ export const CERTIFICATIONS: Certification[] = [
   },
 ];
 
-export type Role = {
-  title: string;
-  company: string;
-  start: string;
-  end?: string;
-  summary: string;
-};
-
-export const EMPLOYMENT: Role[] = [
-  {
-    title: "System & Network Engineer",
-    company: "Rolling Plans Pvt. Ltd.",
-    start: "July 2026",
-    summary:
-      "Working as a System & Network Engineer focused on enterprise networking, system administration, cloud infrastructure, virtualization, and cybersecurity.",
-  },
-];
+export const PROFILE = {
+  name: "Nabin Dhungana",
+  role: "System & Network Engineer",
+  bio: "I am a System & Network Engineer focused on enterprise networking, system administration, cloud infrastructure, virtualization, and cybersecurity. My long-term direction is Cloud Solutions Architecture, with strong hands-on interest in designing reliable, secure, and scalable infrastructure.",
+  keywords: [
+    "system administration",
+    "network engineering",
+    "cybersecurity",
+    "cloud technologies",
+    "Azure",
+    "AWS",
+    "infrastructure",
+    "technical problem solving",
+  ],
+} as const;
 
 export type Project = {
   slug: string;
@@ -191,24 +189,6 @@ export const PROJECTS: Project[] = [
       "https://github.com/Nabin-Dh/azure-enterprise-infrastructure-architecture",
   },
 ];
-
-export const PROFILE = {
-  name: "Nabin Dhungana",
-  role: "System & Network Engineer",
-  company: "Rolling Plans Pvt. Ltd.",
-  roleStart: "July 2026",
-  bio: "Nabin Dhungana is a System & Network Engineer focused on enterprise networking, system administration, cloud infrastructure, virtualization, and cybersecurity. His long-term career direction is Cloud Solutions Architecture, with strong hands-on interest in designing reliable, secure, and scalable infrastructure.",
-  keywords: [
-    "system administration",
-    "network engineering",
-    "cybersecurity",
-    "cloud technologies",
-    "Azure",
-    "AWS",
-    "infrastructure",
-    "technical problem solving",
-  ],
-} as const;
 
 export type ProfessionalDomain = {
   title: string;

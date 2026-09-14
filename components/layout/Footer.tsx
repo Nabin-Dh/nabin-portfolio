@@ -4,7 +4,7 @@ import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { CloudLogo } from "@/components/ui/CloudLogo";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
-import { CONTACT_TOPICS, CV_PATH, NAV_LINKS, SITE } from "@/lib/constants";
+import { CONTACT_TOPICS, NAV_LINKS, SITE } from "@/lib/constants";
 
 export function Footer() {
   return (
@@ -80,12 +80,6 @@ export function Footer() {
             Resources
           </p>
           <Link
-            href={CV_PATH}
-            className="text-sm text-text-secondary transition-colors hover:text-text-primary"
-          >
-            Download CV
-          </Link>
-          <Link
             href="/projects"
             className="text-sm text-text-secondary transition-colors hover:text-text-primary"
           >
@@ -108,11 +102,11 @@ export function Footer() {
         </nav>
 
         <nav
-          aria-label="Open to opportunities"
+          aria-label="Ways to connect"
           className="grid grid-cols-1 content-start gap-2"
         >
           <p className="font-mono text-xs uppercase tracking-widest text-text-secondary">
-            Open to
+            Let&apos;s connect
           </p>
           {CONTACT_TOPICS.map((topic) => (
             <Link

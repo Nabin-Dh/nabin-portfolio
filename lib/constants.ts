@@ -1,12 +1,12 @@
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://nabindhungana.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.nabin-dhungana.com.np";
 
 export const SITE = {
   name: "Nabin Dhungana",
   role: "System & Network Engineer | Aspiring Cloud Solutions Architect",
   headline: "System & Network Engineer | Aspiring Cloud Solutions Architect",
   description:
-    "Nabin Dhungana is a System & Network Engineer focused on enterprise networking, system administration, cloud infrastructure, virtualization, and cybersecurity. His long-term career direction is Cloud Solutions Architecture, with strong hands-on interest in designing reliable, secure, and scalable infrastructure.",
+    "I am a System & Network Engineer focused on enterprise networking, system administration, cloud infrastructure, virtualization, and cybersecurity. My long-term direction is Cloud Solutions Architecture — designing reliable, secure, and scalable infrastructure.",
   url: SITE_URL,
   email: "nabinndh@gmail.com",
   socials: {
@@ -26,11 +26,9 @@ export const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
-export const CV_PATH = "/cv";
-
 export const CONTACT_TOPICS = [
-  "Infrastructure roles",
-  "Networking or cloud engineering work",
+  "Networking & cloud infrastructure",
+  "System administration & security",
   "Consulting & collaboration",
-  "Architecture feedback",
+  "Architecture & design feedback",
 ] as const;

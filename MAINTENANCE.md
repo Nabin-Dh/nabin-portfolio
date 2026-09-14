@@ -38,11 +38,9 @@ When you open that link, you will see a list of folders and files:
 - `components/` — visual building blocks. **Do not edit anything here.**
 - `lib/` — the "settings" where your profile data, projects, and expertise live.
 - `content/insights/` — where your articles (Insights) live.
-- `public/` — where you put images: your CV PDF and your profile photo.
-- `api/` — the small "server" that receives contact messages and counts article
-  reactions/views. Run by Azure automatically; **you don't normally touch it.**
+- `public/` — where you put images: your profile photo (and the `CNAME` file
+  that keeps the custom domain working). **Do not rename or delete `CNAME`.**
 - `.github/` — the automatic build-and-publish instructions. **Do not edit.**
-- `MAINTENANCE.md` and `README.md` — these instructions.
 
 To **edit** any file: click on it, then click the **pencil icon** near the top
 right. A text box opens; make your change, scroll down to the green **"Commit
@@ -242,21 +240,7 @@ Projects appear on the Projects page. They live in **`lib/content.ts`**, in the
 
 ---
 
-## 10. How to replace the CV
-
-1. In GitHub, go to `public` → `cv`.
-2. Click the file **`nabin-dhungana-cv.pdf`**.
-3. Click the **trash icon** to delete it, then:
-   - Click **"Add file" → "Upload files"**.
-   - Upload your new PDF **with the exact same file name**
-     `nabin-dhungana-cv.pdf`.
-4. Commit.
-
-> The file name must stay exactly `nabin-dhungana-cv.pdf` — the site and the
-> download button depend on that exact name. Your PDF can contain anything you
-> like; no code change is needed.
-
-## 11. How to replace the profile photo
+## 10. How to replace the profile photo
 
 1. In GitHub, go to the `public` → `profile` folder. (If it doesn't exist,
    create it via **"Add file"**.)
@@ -272,31 +256,30 @@ present, the site simply shows no photo — nothing breaks.
 
 ## 12. How changes get from GitHub to the live website
 
-The deployment service (Azure Static Web Apps) is connected to your GitHub
+The deployment service (**GitHub Pages**) is connected to your GitHub
 repository. The automatic flow is:
 
 1. You **save/commit** a change on GitHub.
-2. Azure notices the new commit and **automatically rebuilds** the site.
-3. Azure publishes the new version to the internet.
-4. The live website shows your change — usually within ~2–5 minutes.
+2. GitHub notices the new commit and **automatically rebuilds** the site.
+3. GitHub Pages publishes the new version to the internet.
+4. The live website shows your change — usually within ~1–3 minutes.
 
 You do **not** need to start anything, run any command, or use any software.
 Deployment is hands-free.
 
-> The build machine is a remote cloud service. It does **not** need your
-> computer, OmniRoute, OpenCode, or anything local to be running.
+> The build machine is a remote cloud service (GitHub's Actions runners). It
+> does **not** need your computer, OmniRoute, OpenCode, or anything local to be
+> running.
 
 ## 13. What requires a rebuild/deployment and what does not
 
 - **Every published change** (an article, a profile edit, a new project, the
-  CV, the photo, any file in `content/`, `lib/`, or `public/`) goes through the
+  photo, any file in `content/`, `lib/`, or `public/`) goes through the
   automatic rebuild as described above. You don't do anything extra — the rebuild
   is automatic on every commit.
 - **Nothing is "instant" without a rebuild.** There is no admin panel, so there
   is no "save and it appears immediately" route for your content. Every *content*
-  change travels through the GitHub → build → deploy pipeline. (The only things
-  that update instantly are visitor metrics like article views/reactions — those
-  are written by the serverless API as they happen, not through a rebuild.)
+  change travels through the GitHub → build → deploy pipeline.
 - **Nothing about hosting/security settings** (domain, HTTPS, DNS) requires a
   rebuild — those are configured once at the hosting provider, not per change.
 
@@ -326,8 +309,8 @@ version stays live — it does **not** go blank). Common causes and fixes:
   `.mdx` file). Check the `Actions` tab of your GitHub repo — a red ⤫ next to
   the latest run shows a failure message explaining the line/column. Fix the
   file and commit again.
-- **A file name is wrong** (e.g. the CV or photo not using the exact required
-  name). Check the names against sections 10 and 11.
+- **A file name is wrong** (e.g. the profile photo not using the exact required
+  name). Check the name against section 10.
 - **Left a half-pasted block** in `lib/content.ts` (missing comma/bracket).
   Compare your block against the example above.
 
@@ -371,8 +354,7 @@ is meant to be public and is fine to commit.
 | Update experience | `lib/content.ts` | 7 |
 | Update expertise | `lib/content.ts` | 8 |
 | Add/edit projects | `lib/content.ts` | 9 |
-| Replace CV | `public/cv/nabin-dhungana-cv.pdf` | 10 |
-| Replace profile photo | `public/profile/` | 11 |
+| Replace profile photo | `public/profile/` | 10 |
 
 **Advanced/don't-touch:** anything in `app/` or `components/` changes how the
 site looks and is built. A developer handles those — a normal content edit never
@@ -411,166 +393,55 @@ contact) are designed to look correct in both themes. The ideas behind this:
 
 ## 18. Contact form — how it works now
 
-The Contact form now submits to a small serverless API (in the `api/` folder)
-that **emails you the message directly** through SendGrid. When a visitor fills
-the form in and presses "Send message", the message is delivered to your inbox —
-no email app on their side is needed, and no visitor data is stored.
+The Contact form is a **`mailto:` composer**. When a visitor fills it in and
+presses "Send message", their device opens their own email app with the message
+pre-filled and addressed to you. The site itself does **not** store or transmit
+the message anywhere — no backend, no database, nothing to configure.
 
-What the backend does automatically:
+Why this is the right choice for this site:
 
-- **Validates** the message (name, valid email, non-empty message) and rejects
-  obviously bad input.
-- **Blocks spam** quietly: a hidden "honeypot" field traps bots, an instant
-  submit is ignored, and there's a per-visitor rate limit. The visitor gets no
-  error for these — bots are simply silently accepted-and-ignored.
-- **Emails you** via SendGrid from a verified sender address to your `CONTACT_TO_EMAIL`.
+- **No server needed** — the whole site stays a static GitHub Pages site.
+- **No spam/misuse surface** — there's no endpoint for bots to attack.
+- **Privacy-friendly** — no visitor message data ever reaches this site.
 
-If anything isn't configured yet, the form shows a friendly "Contact delivery is
-not configured yet" style message and still offers your direct email address as
-a fallback — so the site never appears "broken".
+The email address visitors write to is set in `lib/constants.ts` (the
+`SITE.email` value). To change it, edit that one line and commit.
 
-The email address you receive messages at is controlled by the setting
-`CONTACT_TO_EMAIL` (see section 20). Your public email shown elsewhere on the
-site is set in `lib/constants.ts` (the `SITE.email` value).
+> The `api/` folder in the repo still contains an **optional** serverless
+> backend (Azure Functions + SendGrid) that could deliver contact messages
+> automatically. It is deliberately **not** part of the GitHub Pages deployment
+> and the site works perfectly without it. See README.md if you ever want to run
+> it separately.
 
-## 19. Article reactions and views — how they work now
+## 19–25. Optional serverless backend (`api/`)
 
-Article pages now show two genuinely-persisted, honest metrics:
+The `api/` folder contains a standalone Azure Functions project (contact
+delivery via SendGrid + article view/reaction metrics via Azure Table Storage)
+that is **not** part of the GitHub Pages deployment. The live site does **not**
+use it, and there is nothing to configure for the site to work.
 
-- **Views** — a small "views" number next to the date/read-time on each article.
-- **Reactions** — "Useful / Not useful" buttons on each article, with the real
-  tallies shown next to them.
+The front end stays honest about this by design:
 
-How it works, and what it deliberately does:
+- **Contact form** is a `mailto:` composer (see section 18) — no backend involved.
+- **Article views/reactions** render nothing unless the optional API is reachable.
+  The site **never** shows a made-up number. If the API isn't deployed or is
+  unreachable, the buttons quietly show nothing.
 
-- Counts are **real**, stored in an Azure datastore (Table Storage / Cosmos
-  Table API) by the same serverless API. The site **never** shows a made-up
-  number. If the metrics backend isn't configured or is unreachable, the site
-  simply shows **no** view count and no reaction tallies — it never invents them.
-- **Refreshes aren't over-counted.** A visitor's browser session is given a
-  random (non-personal) id, and the API counts **at most one view per article
-  per day** and **one reaction per article** per that id. Refreshing a page does
-  not keep inflating the counter.
-- **Privacy-conscious.** Only that random id and a date are stored — no name,
-  email, IP address, or device fingerprint. The site tracks nothing else.
+If you ever decide to run the backend separately (`api/`), the full setup steps
+— SendGrid, datastore, environment variables, local testing, and reading metrics
+— are documented in `README.md` in that folder and in `PROJECT_PLAN.md`. You
+would also need to set `NEXT_PUBLIC_API_URL` so the front end can reach it.
 
-You read these numbers with the Azure portal or the Table Storage explorer — see
-section 24 ("Understanding metrics"). There is no owner notification for views
-or reactions (that would produce noise, not signal); these are aggregate
-counters you check when you want to.
-
----
-
-## 20. Environment variables (the settings the site's server uses)
-
-Everything secret and configurable about the backend is controlled by
-**environment variables** — a list of *name = value* settings attached to the
-Azure Static Web App. **None of these values belong inside a code file.** They
-are entered once in the Azure portal (and optionally in a `.env` file for local
-testing).
-
-The API reads these:
-
-| Variable | What it's for | Required? |
-|---|---|---|
-| `AZURE_TABLES_CONNECTION_STRING` | Connection string for the datastore that holds article views/reactions. | Required for metrics |
-| `SENDGRID_API_KEY` | Secret key that lets the site send email through SendGrid. | Required for contact |
-| `SENDGRID_FROM_EMAIL` | The verified sender address emails go out from. | Required for contact |
-| `SENDGRID_FROM_NAME` | Display name shown as the sender (e.g. "Nabin Dhungana"). | Optional |
-| `CONTACT_TO_EMAIL` | The inbox where contact messages arrive (default `nabinndh@gmail.com`). | Optional |
-
-There is also one **build-time** variable used only when building the front end
-(not secret): `NEXT_PUBLIC_SITE_URL` (the site's canonical URL). Never prefix a
-secret with `NEXT_PUBLIC_` — only non-secret, front-end values use that prefix.
-
-> **Never** commit real values. The file `.env.example` shows only safe, empty
-> placeholder names. Real secrets live only in Azure (and optionally a local
-> `.env` that is git-ignored).
-
-## 21. Set up SendGrid (one time, for contact email)
-
-Contact messages are delivered with **SendGrid** (Twilio's email service). You
-need a free SendGrid account and a verified sender.
-
-1. **Create a SendGrid account** at sendgrid.com (click "Start for free").
-2. **Verify a sender.** In SendGrid go to **Settings → Sender Authentication**.
-   The simplest is a **Single Sender Verification**: enter an email address you
-   control (e.g. `nabin@your-domain.com` or your Gmail) and click the
-   confirmation link they email you.
-3. **Create an API key.** Go to **Settings → API Keys**, click **Create API
-   Key**, name it (e.g. `portfolio-contact`), choose **Restricted Access** (a
-   key that can only *Send*), and save the full key — it is shown once only.
-4. **Add the settings in Azure.** In the Azure portal open your Static Web App →
-   **Configuration → Application settings**, and add:
-   - `SENDGRID_API_KEY` = the key from step 3
-   - `SENDGRID_FROM_EMAIL` = the address you verified in step 2
-   - `SENDGRID_FROM_NAME` = your name (optional)
-   - `CONTACT_TO_EMAIL` = the inbox you want to receive messages in
-   Save, then wait a moment for the deployment to pick them up.
-
-## 22. Set up the Azure datastore (one time, for views/reactions)
-
-Article views and reactions are stored in **Azure Table Storage** (the simplest,
-cheapest option; the same connection string also works with Cosmos DB's Table
-API). It needs no "server" — Azure manages it.
-
-1. **Create a storage account.** In the Azure portal choose **Create a resource
-   → Storage account** (any standard account type is fine; the free/basic tiers
-   work for a portfolio).
-2. **Copy the connection string.** Open the storage account → **Security +
-   networking → Access keys**, and copy either connection string.
-3. **Add the setting in Azure.** In your Static Web App → **Configuration →
-   Application settings**, add `AZURE_TABLES_CONNECTION_STRING` = the string from
-   step 2 and save. The first article view/reaction will create the table and
-   rows automatically — you don't need to create tables by hand.
-
-For Cosmos DB instead: create a Cosmos DB account with the **Table API**, and use
-its table connection string in the same `AZURE_TABLES_CONNECTION_STRING` setting.
-
-## 23. Testing the API locally (for a developer)
-
-A developer can run the API on their own computer to test it before deploying:
-
-1. Install the [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local).
-2. In the `api/` folder, copy `local.settings.example.json` to `local.settings.json`
-   and put in real (or test) placeholder values for the connection string and
-   SendGrid key.
-3. Run `npm install` then `npm run start` inside `api/`.
-4. The endpoints are then available locally at `http://localhost:7071/api/...`
-   (`/api/contact`, `/api/insights/views`, `/api/insights/reaction`,
-   `/api/insights?slug=...`).
-
-Local testing is optional and is for developers only — you never need it to
-maintain the live site.
-
-## 24. Understanding article metrics
-
-There is no admin dashboard for metrics — the numbers are already shown on each
-article page (views next to the date, and the Useful/Not-useful tallies), and
-the underlying rows are stored in your datastore.
-
-To inspect the raw rows:
-
-- **Azure portal:** open your storage account → **Storage browser → Tables →
-  `insightsMetrics`**. Each article has:
-  - rows whose name starts with `views:<article-slug>` — one row per unique
-    count; each row is one view (a visitor+day).
-  - rows whose name starts with `reactions:<article-slug>` — one row per unique
-    reaction, with a `vote` column of `helpful` or `not-helpful`.
-- **Interpreting:** the number of `views:` rows for an article = its view count;
-  the number of `reactions:` rows whose `vote` is `helpful` = the Useful count
-  (and likewise for `not-helpful`).
-
-These counts are deliberately **deduplicated** (one view per visitor per day, one
-reaction per visitor per article), so they reflect distinct readers, not page
-refreshes.
+> **Rule for this Pages site:** never fabricate metrics or pretend the backend
+> runs. If the optional API is not deployed, the site shows no metrics — that is
+> deliberate and correct.
 
 ## 25. Deployment & rollback
 
-Deployment is fully automatic via GitHub Actions (see the `.github/workflows/`
-file): every commit to the `main` branch triggers a build of the front end and
-the `api/` functions, then publishes both to Azure Static Web Apps. You do not
-run anything manually.
+Deployment is fully automatic via GitHub Actions (see `.github/workflows/`):
+every commit to the `main` branch triggers a build of the site (lint, typecheck,
+`next build` → static `out/`), and GitHub Pages publishes it. You do not run
+anything manually.
 
 - **Deploy a change:** just commit it on GitHub — see section 1.
 - **Roll back a bad change:** use the same "History → Restore this version"
@@ -578,14 +449,11 @@ run anything manually.
   The already-published version keeps serving until the rebuild finishes. If the
   rollout fails, the previous good deployment stays live — a failed build never
   blanks the site.
-- **Config-only changes** (new SendGrid key, storage settings) are made in Azure
-  application settings and do not require a code commit; Azure picks them up on
-  the next deploy or immediately.
-
-> **First deployment note:** the exact `app_location` / `api_location` values in
-> the workflow must be confirmed against the workflow Azure auto-generates when
-> you create the Static Web App resource. If the API doesn't appear after the
-> first deploy, compare the generated workflow with the one in `.github/`.
+- **Custom domain:** the `public/CNAME` file (value `www.nabin-dhungana.com.np`)
+  tells GitHub Pages which custom domain to serve. Do **not** edit or delete it,
+  and do **not** point it at a different domain unless you own that domain
+  and have set up its DNS too. Changing domains is a hosting/DNS task, not a
+  content edit.
 
 The full technical architecture and step-by-step roadmap live in
 `PROJECT_PLAN.md`.

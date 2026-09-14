@@ -12,14 +12,14 @@ import { Link } from "@/components/ui/Link";
 import { ProfilePhoto } from "@/components/ui/ProfilePhoto";
 import { TagList } from "@/components/ui/TagList";
 import { SITE } from "@/lib/constants";
-import { getAllSlugs, getInsightBySlug } from "@/lib/insights";
+import { getAllExportSlugs, getInsightBySlug } from "@/lib/insights";
 
 type InsightPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
+  return getAllExportSlugs().map((slug) => ({ slug }));
 }
 
 export const dynamicParams = false;

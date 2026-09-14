@@ -21,7 +21,7 @@ import {
 export const metadata: Metadata = {
   title: "Expertise",
   description:
-    "Technical expertise of Nabin Dhungana across networking, systems & infrastructure, cloud & virtualization, and cybersecurity.",
+    "My technical expertise across networking, systems & infrastructure, cloud & virtualization, and cybersecurity.",
   alternates: {
     canonical: "/expertise",
   },

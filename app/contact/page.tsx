@@ -3,15 +3,14 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { Reveal } from "@/components/fx/Reveal";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/Button";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { Container } from "@/components/ui/Container";
-import { Link } from "@/components/ui/Link";
-import { CONTACT_TOPICS, CV_PATH, SITE } from "@/lib/constants";
+import { CONTACT_TOPICS, SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with Nabin Dhungana — System & Network Engineer.",
+  description:
+    "Get in touch with me — questions, feedback, or collaboration opportunities.",
   alternates: {
     canonical: "/contact",
   },
@@ -54,7 +53,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="/contact"
         title="Contact"
-        description="Have a role, project, or infrastructure challenge to discuss? Get in touch."
+        description="Have a technical problem, collaboration idea, or infrastructure project to discuss? Get in touch."
       />
 
       <Container className="py-16 sm:py-24">
@@ -65,8 +64,8 @@ export default function ContactPage() {
                 Send a message
               </h2>
               <p className="mt-3 text-text-secondary">
-                Fill in the form and your message is delivered securely to my
-                inbox — no extra apps needed.
+                Compose an email in your mail app with the details pre-filled —
+                no server involved, your message goes straight to my inbox.
               </p>
               <div className="mt-8">
                 <ContactForm />
@@ -126,19 +125,6 @@ export default function ContactPage() {
                     </li>
                   ))}
                 </ul>
-              </div>
-            </Reveal>
-
-            <Reveal delay={200}>
-              <div className="mt-8 flex flex-col gap-3 rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)]">
-                <h3 className="text-lg font-semibold text-text-primary">CV</h3>
-                <p className="text-sm leading-6 text-text-secondary">
-                  Download my current CV for a full overview of skills and
-                  credentials.
-                </p>
-                <Button asChild variant="outline" className="self-start">
-                  <Link href={CV_PATH}>Download CV</Link>
-                </Button>
               </div>
             </Reveal>
           </aside>

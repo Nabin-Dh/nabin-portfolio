@@ -2,6 +2,9 @@ import { ImageResponse } from "next/og";
 
 import { SITE } from "@/lib/constants";
 
+export const runtime = "nodejs";
+export const dynamic = "force-static";
+
 export const alt = `${SITE.name} — ${SITE.headline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -78,7 +81,12 @@ export default function OpengraphImage() {
           }}
         >
           <div
-            style={{ position: "relative", width: 48, height: 36, display: "flex" }}
+            style={{
+              position: "relative",
+              width: 48,
+              height: 36,
+              display: "flex",
+            }}
           >
             <svg
               viewBox="0 0 38 28"

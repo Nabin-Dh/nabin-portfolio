@@ -37,7 +37,7 @@ Build a production-quality personal portfolio website for Nabin Dhungana that co
 | Typography (prose) | `@tailwindcss/typography` |
 | Icons | Lucide React |
 | Forms | mailto-only (no backend/service) |
-| Deployment | Azure Static Web Apps (Free tier — not yet configured) |
+| Deployment | GitHub Pages (static export, free, custom domain `www.nabin-dhungana.com.np`) |
 | Analytics | Not configured — deferred |
 | Testing | CLI-level QA (curl); Playwright deferred |
 | Linting/Formatting | Biome |
@@ -57,8 +57,7 @@ Build a production-quality personal portfolio website for Nabin Dhungana that co
 | `/insights` | Insights Index | Blog-style listing |
 | `/insights/[slug]` | Insight Detail | Full MDX-rendered article |
 | `/credentials` | Credentials | Certifications, training, education |
-| `/contact` | Contact | Contact form + direct links |
-| `/cv` | CV Download | Route → serves PDF |
+| `/contact` | Contact | Contact form (mailto) + direct links |
 | `/feed.xml` | RSS Feed | Auto-generated |
 
 ---
@@ -238,119 +237,156 @@ RootLayout
 
 ---
 
-## Deployment Plan — Target Production Architecture
+## Deployment Plan — Target Production Architecture (MIGRATED to GitHub Pages)
 
 ```
 GitHub repository
         ↓  (push / commit to main)
-Azure Static Web Apps (Free tier) — automatic build + host
-        ↓  (HTTP + HTTPS)
-Cloudflare DNS  →  https://nabindhungana.com   /   https://www.nabindhungana.com
+GitHub Actions (lint → typecheck → next build → static export `out/`)
+        ↓  (upload-pages-artifact + deploy-pages)
+GitHub Pages  →  https://www.nabin-dhungana.com.np   (custom domain via CNAME)
 ```
 
-- **Platform:** Azure Static Web Apps (Free tier) — connected to the GitHub repo,
-  auto-builds on every push, includes free HTTPS.
-- **Build:** `npm install` + `npm run build` (standard Next.js; the app uses the
-  Node runtime, verified portable — see "Phase 7").
-- **DNS/CDN:** Cloudflare (free) points the domain at the Azure host; provides the
-  public DNS records for `nabindhungana.com` and `www.nabindhungana.com`.
-- **Custom domain:** `nabindhungana.com` canonical, `www.nabindhungana.com` supported
-  (Cloudflare redirects www → apex).
-- **Canonical/metadata domain:** `SITE.url` = `https://nabindhungana.com` (default), and
-  is overridable per-environment via `NEXT_PUBLIC_SITE_URL`. No localhost hard-coding.
-- **Cost:** $0/month (Azure SWA Free + Cloudflare Free). The only purchased item is the
-  domain itself (owner-owned, not purchased in this project).
-- **No Azure-specific application dependencies** were introduced — the app is portable
-  to any Next.js Node host.
+- **Platform:** GitHub Pages — fully static export (`next.config.ts` sets
+  `output: "export"` + `trailingSlash: true` + `images.unoptimized`). No server,
+  no Node runtime at the host.
+- **Deploy:** `.github/workflows/deploy.yml` on every push to `main`:
+  permissions `contents: read` / `pages: write` / `id-token: write`, concurrency
+  group `pages`, uploads `out/`, deploys via the Pages API. Custom domain served
+  from `public/CNAME` (`www.nabin-dhungana.com.np`).
+- **Build:** `npm ci` → `npm run lint` → `npm run typecheck` → `npm run build`.
+  The build is fully static — no secrets or env vars are required.
+- **DNS:** CNAME record for `www` → `<owner>.github.io` at the domain registrar.
+- **Canonical/metadata domain:** `SITE.url` = `https://www.nabin-dhungana.com.np`
+  (default), overridable per-environment via `NEXT_PUBLIC_SITE_URL`. No
+  localhost hard-coding.
+- **Cost:** $0/month (GitHub Pages + GitHub Actions). The only purchased item is
+  the domain itself (owner-owned).
+- **Honesty constraints kept:** contact = `mailto:` composer (no backend), the
+  optional serverless `api/` (Azure Functions) is documented but **not** deployed
+  with the Pages site, and article metrics render nothing unless that API is
+  reachable — counts are never fabricated.
 
 ### Deployment prerequisites
 
-- A GitHub **repository** for the code (not created in this project yet — repo is local).
-- The **real content** from the owner: CV PDF, profile photo, education details, any
-  article topics (all placeholders documented; nothing fabricated).
-- A **domain** Nabin owns, e.g. `nabindhungana.com` (not purchased here).
+- GitHub **repository** `github.com/Nabin-Dh/nabin-portfolio` (`main` branch).
+- The **real content** from the owner: profile photo (present), insight article
+  topics (site is ready; Insights shows an empty state).
+- The **domain** `www.nabin-dhungana.com.np` (owner-owned).
 
 ### Required GitHub repository setup
 
-1. Initialize/publish the repo (e.g. `github.com/nabin-dh/nabin-portfolio`), push the
-   current code to a `main` branch (`.gitignore` already excludes `node_modules`,
-   `.next`, env files; `.env.example` is included).
-2. (Recommended) protect `main` with branch protection; enable a repo Secrets/variables
-   scope if Azure needs a token (see Azure below).
+1. Repo published on GitHub (`main`), code pushed.
+2. Pages must be enabled in **Settings → Pages → Build and deployment →
+   Source = "GitHub Actions"** (the workflow deploys via the Actions API, so the
+   "GitHub Actions" source is mandatory — do NOT select "Deploy from a branch").
+3. Custom domain `www.nabin-dhungana.com.np` configured in **Settings → Pages →
+   Custom domain** (DNS must verify first). HTTPS (Enforce) is automatic.
 
-### Required Azure setup (Azure Static Web Apps, free tier)
+### Required DNS setup (registrar)
 
-1. Create an **Azure Static Web Apps** resource with the Free plan.
-2. Connect its deployment source to the GitHub repo + `main` branch.
-3. Azure generates a GitHub Actions workflow that builds (`npm run build`) and publishes
-   automatically on every push.
-4. Under **Custom domains**, add `nabindhungana.com` (and optionally `www.nabindhungana.com`).
-
-### Required DNS setup (Cloudflare)
-
-1. Add `nabindhungana.com` to Cloudflare (free plan) and let Cloudflare manage DNS.
-2. Point the apex/`www` to the Azure SWA endpoint exactly as the Azure portal's
-   "Custom domains" wizard prescribes (typically a Cloudflare CNAME / edge record to the
-   SWA host and the generated `TXT`/verification record for the custom domain).
-3. Create an **Apex redirect** (`.host.data` or dynamic redirect) — or a plain redirect
-   rule pointing `www.nabindhungana.com` at `https://nabindhungana.com`.
-4. Ensure SSL/TLS is set (Cloudflare "Full" mode works with Azure SWA's HTTPS; Azure SWA
-   itself issues an HTTPS cert once the domain is validated).
-
-### Custom domain + HTTPS setup
-
-- Choose the **apex (`nabindhungana.com`) as canonical** and redirect `www` to it (or
-  register both and pick a primary). The site's `SITE.url`/canonical/sitemap defaults to
-  the apex; set `NEXT_PUBLIC_SITE_URL=https://nabindhungana.com` at the host if hosting on
-  a preview/non-apex URL during setup.
-- HTTPS is provided by Azure SWA (automatic) and/or Cloudflare (its own SSL). Keep
-  `Strict-Transport-Security` (already sent) so browsers stick to HTTPS.
-- Verify `/sitemap.xml` and `/robots.txt` still emit the final canonical domain after
-  deployment.
+1. Create a CNAME record: **`www` → `Nabin-Dh.github.io`**.
+2. (Optional in most setups) Apex (`@`) either an ALIAS/ANAME to the same target
+   or a URL redirect to `www` — the site's canonical domain is `www...`.
 
 ### Expected maintenance workflow
 
-The owner edits content (articles, profile, projects, CV, photo) directly on GitHub from
-any device; every commit auto-deploys. See **MAINTENANCE.md** for the full non-expert
-guide. A developer is only needed for structural/design/code changes.
+The owner edits content (articles, profile, projects, photo) directly on GitHub
+from any device; every commit auto-deploys. See **MAINTENANCE.md** for the full
+non-expert guide. A developer is only needed for structural/design/code changes.
 
 ### Backup / rollback strategy
 
-- **Backup = the Git repository.** Every version of every file is in Git history; the
-  repo (possess a local clone) is the backup.
-- **Rollback** = use GitHub's file "History → Restore" (MAINTENANCE.md §14) for a single
-  file, or revert a commit. Azure redeploys the restored version automatically.
-- A failed deployment **never takes the live site down** — the last good build stays up.
+- **Backup = the Git repository.** Every version of every file is in Git history;
+  the repo (possess a local clone) is the backup.
+- **Rollback** = use GitHub's file "History → Restore" (MAINTENANCE.md §14) for
+  a single file, or revert a commit. Pages redeploys the restored version
+  automatically.
+- A failed deployment **never takes the live site down** — the last good build
+  stays up.
 
 ### Cost considerations
 
-- Azure SWA Free tier: $0 (1 free production environment; appropriate for a portfolio).
-- Cloudflare Free: $0.
-- Domain: ~$10–15/yr (owner). No other recurring costs. No database, backend, analytics,
-  or CMS costs — none were added.
+- GitHub Pages + Actions: $0 (public repo).
+- Domain: ~cost of the `.com.np` domain (owner). No database, backend, analytics,
+  or CMS costs — none were added in the Pages deployment.
 
 ### Remaining owner-provided items (before/at launch)
 
-- Real CV PDF → `public/cv/nabin-dhungana-cv.pdf`
-- Profile photo → `public/profile/` (name per MAINTENANCE.md §11)
-- Formal education details (only confirmed professional training is shown now — nothing
-  fabricated)
 - Insight article topics/content (site is ready; Insights shows an empty state)
-- Any additional projects/experience beyond the confirmed two
-- The domain + GitHub repo ownership
+- Any additional projects/experience beyond the confirmed ones
+- DNS CNAME record + Pages custom-domain confirmation on the registrar side
 
 ### Post-deployment maintenance checklist
 
-- [ ] Publish repo; connect Azure; verify first auto-deploy turns green
-- [ ] Point Cloudflare DNS at Azure; add custom domain(s); validate HTTPS
+- [x] Publish repo; GitHub Pages enabled with **Source = GitHub Actions**
+- [x] Add `public/CNAME` (`www.nabin-dhungana.com.np`)
+- [x] Set up the DNS CNAME record (`www` → `Nabin-Dh.github.io`) at the registrar
+- [x] Configure the custom domain in Settings → Pages (+ enforce HTTPS)
 - [ ] Visit every route on the live domain (all 200) and unknown slugs (404)
-- [ ] Confirm `/robots.txt` + `/sitemap.xml` use `https://nabindhungana.com`
-- [ ] Verify `/cv` streams the real PDF (attachment header)
-- [ ] Verify profile photo appears (About/Home) once added
+- [ ] Confirm `/robots.txt` + `/sitemap.xml` use `https://www.nabin-dhungana.com.np`
+- [ ] Verify profile photo appears (About/Home)
+- [ ] Confirm the marquee shows the working-stack icons on the homepage
 - [ ] Confirm security headers (6 set + no `X-Powered-By`) on the live host
 - [ ] Add real content (articles, CV, photo, education)
 - [ ] Lighthouse pass (perf/a11y/SEO) + final CSP decision on the live host
 - [ ] Optional later: RSS feed, OG images, privacy-friendly analytics, visual/Git CMS
+
+---
+
+## Phase 10 — GitHub Pages Migration + Professional Refinement (2026-09-14)
+
+> This phase migrated the site from the planned Azure Static Web Apps hosting to
+> **GitHub Pages (fully static export)** and refined professional presentation.
+
+**Deployment migration:**
+- Switched `next.config.ts` to `output: "export"` + `trailingSlash: true` +
+  `images.unoptimized`; removed the Node-runtime-only headers.
+- **Deleted** the two Azure Static Web Apps workflows
+  (`azure-static-web-apps.yml`, `azure-static-web-apps-lemon-glacier-092bae200.yml`).
+- **Added** `.github/workflows/deploy.yml`: on push to `main` (or `workflow_dispatch`),
+  `npm ci` → `npm run lint` → `npm run typecheck` → `npm run build`, then
+  `actions/upload-pages-artifact` (`out/`) + `actions/deploy-pages`. Permissions:
+  `contents: read`, `pages: write`, `id-token: write`; concurrency group `pages`.
+- **Added** `public/CNAME` → `www.nabin-dhungana.com.np` (custom domain).
+- **Added** `.gitattributes` (`* text=auto eol=lf`) to fix repo-wide CRLF formatter
+  failures on Windows checkouts (`core.autocrlf` + Biome LF); ran `npm run format`.
+- **Cleared stale `.next` dev types** that referenced the deleted `app/cv/route.js`.
+
+**Professional-identity refinement:**
+- **CV removed site-wide:** `app/cv/route.ts` + `public/cv/nabin-dhungana-cv.pdf`
+  deleted; all CV CTAs stripped from Navbar, Footer, Hero, About, Experience, and
+  Contact (no download PDF is fabricated). The role/employer (`Rolling Plans
+  Pvt. Ltd.`, `July 2026`) entry was removed from `lib/content.ts` and experience
+  reframed as two-plus years of hands-on practice — no invented employer.
+- **Working-stack marquee (new) on the homepage:** `components/ui/TechnologyMarquee.tsx`
+  renders a seamless, reduced-motion-aware marquee of 22 monochrome inline SVG
+  chips (AWS, Microsoft Azure, Terraform, Ansible, NGINX, PowerShell, Linux,
+  Windows Server, Docker, Kubernetes, VMware, Git, GitHub, Python, Cisco,
+  Cloudflare, PostgreSQL, Active Directory, Bash, OpenVPN, Prometheus, Grafana).
+  Icons are inline `currentColor` SVG paths (simple-icons + devicons); "Active
+  Directory" renders as text-only. CSS + keyframes added in `app/globals.css`;
+  section wired into `app/page.tsx` after the Hero with eyebrow `/stack`.
+- **Contact form → `mailto:` composer** (`components/ui/ContactForm.tsx`): validates,
+  opens the visitor's email client, gives feedback. No backend, no stored data.
+
+**Documentation rewrite:**
+- `README.md`, `MAINTENANCE.md`, and this `PROJECT_PLAN.md` were rewritten for
+  the GitHub Pages architecture: deployment flow, DNS/CNAME, no server/no
+  secrets, `mailto:` contact, CV removal, and the optional `api/` backend
+  documented as not part of the Pages deployment (metrics render nothing/were
+  never fabricated).
+
+**Validation (2026-09-14):**
+- `npm run lint` (Biome) clean — fixed unused Navbar `Button` import,
+  `role="region"` → `<section>` a11y semantics, and normalized line endings.
+- `npm run typecheck` clean — deduped `NAV_LINKS`/`CONTACT_TOPICS` in
+  `lib/constants.ts` (duplicate-declaration regression from Phase 1).
+- `npm run build` green — static export produced; `out/` contents verified
+  (routes, `sitemap.xml` with trailing-slash URLs, `robots.txt`, `CNAME` copied,
+  profile photo, no Azure/localhost references).
+- Single commit `Migrate portfolio to GitHub Pages and refine professional
+  presentation` pushed to `main`.
 
 ---
 
@@ -680,32 +716,34 @@ surface and cost with no benefit for this portfolio.
 
 ### 4. Deployment architecture
 
-**Target: Azure Static Web Apps (free tier) with its hybrid/Next.js runtime — or any
-platform that runs `next build` + `next start` (Vercel, Netlify, Azure App Service,
-Azure Container Apps).** The app uses the standard Next.js Node output: `npm install`,
-`npm run build`, then serve the `.next` production build. Deployment is **continuous and
-repo-driven** — whatever connects the Git remote to the host rebuilds on every push.
+**MIGRATED (2026-09-14): target and live deployment is GitHub Pages with a fully
+static export.** `next.config.ts` sets `output: "export"` (`trailingSlash: true`,
+`images.unoptimized`, headers removed). `.github/workflows/deploy.yml` runs
+lint/typecheck/build, uploads `out/`, and deploys via the Pages API; custom
+domain `www.nabin-dhungana.com.np` is served from `public/CNAME`. No server, no
+secrets, no Node runtime at the host. (Historical: the earlier target was Azure
+Static Web Apps with the Node runtime — superseded by this migration.)
 
-Portability review results (all verified for the current codebase):
+Portability review results (current static-export codebase):
 
 | Aspect | Status | Notes |
 |---|---|---|
-| `next.config.ts` | ✅ portable | MDX plugins as strings (Turbopack-safe), `poweredByHeader: false`, headers are host-agnostic middleware config |
-| Env vars | ✅ none required | `NEXT_PUBLIC_SITE_URL` optional per-domain override with `https://nabindhungana.com` fallback; `.env.example` documents it; `.gitignore` permits `.env.example` |
+| `next.config.ts` | ✅ static export | MDX plugins as strings (Turbopack-safe), `poweredByHeader: false`, `output: "export"`, `trailingSlash: true`, `images.unoptimized` |
+| Env vars | ✅ none required | `NEXT_PUBLIC_SITE_URL` optional per-domain override with `https://www.nabin-dhungana.com.np` fallback; `.env.example` documents it; `.gitignore` permits `.env.example` |
 | Asset paths | ✅ portable | Everything under `public/`, referenced by absolute paths, no `localhost`/machine paths |
-| Sitemap / robots / metadata | ✅ portable | Canonical domain from `SITE.url` (env-overridable); `metadataBase` set; article URLs emitted at build |
-| CV delivery | ✅ portable | `/cv` streams `public/cv/nabin-dhungana-cv.pdf` with `Content-Disposition: attachment` + `Cache-Control: public, max-age=3600` + 404 when missing |
-| Image handling | ✅ portable | Local-only images (no remote clouds, no `images.remotePatterns`); next/image optimized from `public/` |
-| MDX generation | ✅ portable | Build-time fs reads of `content/insights/`, no runtime dependency |
-| Dynamic routes | ✅ portable | SSG + `dynamicParams = false` → unknown slugs 404; no on-demand runtime generation needed |
-| Security headers | ✅ portable | 6 headers via `next.config.ts`; **CSP still a deliberate gap** — revisit before/at launch (Phase 8) |
-| Caching | ✅ portable | SSG pages + Next static asset caching; `/cv` explicit `Cache-Control`; no CDN-specific config |
-| Build behavior | ✅ portable | `next build` verified green; self-contained output |
+| Sitemap / robots / metadata | ✅ portable | Canonical domain from `SITE.url` (env-overridable); `metadataBase` set; article URLs emitted at build; all entry URLs use trailing slashes |
+| CV delivery | ✅ removed | CV page/route/PDF removed during the Pages migration; navbar/footer/hero/about/contact no longer expose a CV link |
+| Image handling | ✅ static | Local-only images; `images.unoptimized` (no runtime image optimizer on Pages) |
+| MDX generation | ✅ build-time | Build-time fs reads of `content/insights/`, no runtime dependency |
+| Dynamic routes | ✅ SSG | `generateStaticParams` + `dynamicParams = false` → unknown slugs 404 |
+| Security headers | ✅ host-level | Removed from `next.config.ts` (not applicable to static export); enforced at GitHub Pages / not required for a static site — see vercel/gh-pages conventions |
+| Caching | ✅ static | Fully static assets served by Pages CDN; trailing `.html`/slash routing standard |
+| Build behavior | ✅ green | `npm run build` verified green (static `out/`); lint + typecheck clean |
 
-**Deliberate tradeoff:** static HTML export (`output: "export"`) is *not* used. The `/cv`
-route handler (attachment streaming + 404) and header/route handler support need the Node
-runtime. All target hosts listed above support it natively; no architectural change is
-required to host.
+**Deliberate tradeoff:** the site is now fully static — no server, no route
+handlers, no runtime API. The optional `api/` (Azure Functions) project remains
+in the repo but is **not** deployed with the Pages site; article metrics and the
+contact form degrade honestly (mailto / nothing shown) without it.
 
 ### 5. What can/cannot be edited from another device
 
@@ -729,14 +767,15 @@ required to host.
 
 ### 6. Remaining work before public deployment
 
-1. **Repo + host wiring (owner):** publish the Git remote (GitHub), connect the host
-   (Azure SWA recommended), set `NEXT_PUBLIC_SITE_URL` to the final domain.
-2. **Real content (owner):** real CV PDF, profile photo, formal education details,
-   article topics/posts. Placeholders are documented, nothing fabricated.
-3. **Phase 8 QA (developer):** cross-browser/mobile interactive pass, Lighthouse
-   (perf/a11y/SEO), CSP decision, final security-header check on the live host.
-4. **Post-launch optional:** RSS feed, OG images, analytics (privacy-friendly), a
-   visual/Git CMS only if the owner wants one.
+1. **Repo + Pages wiring (owner):** GitHub Pages enabled with source = "GitHub
+   Actions" (deploy via the workflow), custom domain configured
+   (`www.nabin-dhungana.com.np`), DNS CNAME `www` → `Nabin-Dh.github.io`.
+2. **Real content (owner):** insight articles/posts. (Profile photo present;
+   CV was intentionally removed in the Pages migration.)
+3. **Post-launch QC (developer):** cross-browser/mobile interactive pass,
+   Lighthouse (perf/a11y/SEO), final live check of robots/sitemap/canonical.
+4. **Post-launch optional:** RSS feed, OG images, analytics (privacy-friendly),
+   a visual/Git CMS only if the owner wants one, the optional `api/` backend.
 
 ## Phase 6 Notes & Decisions (2026-09-02)
 
@@ -880,7 +919,7 @@ Static/code-level hardening pass performed without running a server (production 
 4. **Light + dark theme** — full theme system with system-preference fallback, persistence, and no-FOUC startup script
 5. **Server components by default** — minimize client JS
 6. **MDX for content** — no external CMS
-7. **Azure Static Web Apps** — free tier, GitHub-linked deployment
+7. **GitHub Pages** — fully static export (free tier), GitHub-linked deployment
 8. **Biome over ESLint+Prettier** — single tool for lint+format
 9. **3D usage is optional and must prove its value** — not decorative
 10. **CV must be downloadable from multiple locations** (navbar, footer, about, contact)

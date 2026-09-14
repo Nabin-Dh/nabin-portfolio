@@ -10,6 +10,7 @@ import { GithubIcon } from "@/components/ui/brand-icons";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
 import { TagList } from "@/components/ui/TagList";
+import { SITE } from "@/lib/constants";
 import { PROJECTS } from "@/lib/content";
 
 type ProjectPageProps = {
@@ -51,6 +52,16 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
 
   const related = PROJECTS.filter((p) => p.slug !== slug);
 
+  const projectJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: project.title,
+    description: project.description,
+    url: `${SITE.url}/projects/${project.slug}/`,
+    isPartOf: { "@type": "WebSite", name: SITE.name, url: SITE.url },
+    about: { "@type": "Thing", name: project.category },
+  } as const;
+
   return (
     <div className="flex flex-col">
       <PageHeader
@@ -60,6 +71,11 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
       />
 
       <Container className="py-16 sm:py-24">
+        <script
+          type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static, trusted JSON-LD schema
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(projectJsonLd) }}
+        />
         <div className="max-w-3xl">
           <Reveal>
             <nav aria-label="Breadcrumb">

@@ -10,7 +10,7 @@ import { CERTIFICATIONS, EDUCATION } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Credentials",
   description:
-    "Certifications and credentials of Nabin Dhungana — Microsoft Azure, Google Cybersecurity, Aviatrix multicloud networking, and Red Hat Linux.",
+    "My certifications and credentials — Microsoft Azure, Google Cybersecurity, Aviatrix multicloud networking, and Red Hat Linux.",
   alternates: {
     canonical: "/credentials",
   },

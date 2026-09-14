@@ -4,6 +4,8 @@ import { NAV_LINKS, SITE } from "@/lib/constants";
 import { PROJECTS } from "@/lib/content";
 import { getAllInsights } from "@/lib/insights";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -15,19 +17,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...NAV_LINKS.map((link) => ({
-      url: `${SITE.url}${link.href}`,
+      url: `${SITE.url}${link.href}/`,
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
     ...PROJECTS.map((project) => ({
-      url: `${SITE.url}/projects/${project.slug}`,
+      url: `${SITE.url}/projects/${project.slug}/`,
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...getAllInsights().map((insight) => ({
-      url: `${SITE.url}/insights/${insight.slug}`,
+      url: `${SITE.url}/insights/${insight.slug}/`,
       lastModified: insight.date ? new Date(insight.date) : now,
       changeFrequency: "monthly" as const,
       priority: 0.6,

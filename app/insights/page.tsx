@@ -10,7 +10,7 @@ import { getAllInsights, getAllTags } from "@/lib/insights";
 export const metadata: Metadata = {
   title: "Insights",
   description:
-    "Technical insights and write-ups by Nabin Dhungana on networking, systems administration, cloud infrastructure, and cybersecurity.",
+    "My technical insights and write-ups on networking, systems administration, cloud infrastructure, and cybersecurity.",
   alternates: {
     canonical: "/insights",
   },

@@ -1,7 +1,7 @@
 "use client";
 
-import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
-import { useRef, useState } from "react";
+import { AlertCircle, Mail, Send } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { SITE } from "@/lib/constants";
@@ -12,7 +12,9 @@ const INPUT_CLASSES =
 
 const INPUT_ERROR_CLASSES = "border-red-500/60";
 
-type Status = "idle" | "sending" | "success" | "error";
+function encode(value: string): string {
+  return encodeURIComponent(value).replace(/%20/g, "+");
+}
 
 export function ContactForm() {
   const [name, setName] = useState("");
@@ -20,18 +22,7 @@ export function ContactForm() {
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<Status>("idle");
-  const [serverError, setServerError] = useState<string | null>(null);
-  // Anti-spam: the timestamp is used server-side to reject bot-like instant
-  // submissions. The honeypot field `email_address` must stay empty for humans.
-  const loadTimeRef = useRef<number>(0);
-  const [honeypot, setHoneypot] = useState("");
-
-  function startClock() {
-    if (loadTimeRef.current === 0) {
-      loadTimeRef.current = Date.now();
-    }
-  }
+  const [launched, setLaunched] = useState(false);
 
   function validate() {
     const next: Record<string, string> = {};
@@ -63,62 +54,42 @@ export function ContactForm() {
     });
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setServerError(null);
     if (!validate()) {
       return;
     }
-    setStatus("sending");
-    startClock();
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          subject,
-          message,
-          email_address: honeypot,
-          __t: loadTimeRef.current,
-        }),
-      });
-      if (!res.ok) {
-        const body = (await res.json().catch(() => null)) as {
-          error?: string;
-        } | null;
-        setServerError(
-          body?.error ?? "Something went wrong sending your message.",
-        );
-        setStatus("error");
-        return;
-      }
-      setStatus("success");
-    } catch {
-      setServerError(
-        "Network error — please check your connection and try again.",
-      );
-      setStatus("error");
-    }
+    const fallbackSubject = `Message from ${name.trim()}`;
+    const body =
+      `Hi Nabin,\n\n${message.trim()}\n\n— ${name.trim()}\n${email.trim()}`.trim();
+    const href = `mailto:${SITE.email}?subject=${encode(
+      subject.trim() || fallbackSubject,
+    )}&body=${encode(body)}`;
+    setLaunched(true);
+    window.location.href = href;
   }
 
-  if (status === "success") {
+  if (launched) {
     return (
       <div
         role="status"
         className="flex flex-col items-start gap-3 rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)]"
       >
         <div className="flex items-center gap-3">
-          <CheckCircle2 aria-hidden="true" className="h-6 w-6 text-accent" />
+          <Mail aria-hidden="true" className="h-6 w-6 text-accent" />
           <p className="font-semibold text-text-primary">
-            Message sent successfully.
+            Your mail app should have opened.
           </p>
         </div>
         <p className="text-sm text-text-secondary">
-          Thank you, {name.trim() || "there"} — I&apos;ll get back to you at{" "}
-          {email.trim()}. For anything urgent, you can also reach me directly at{" "}
+          Your message is ready to send to{" "}
+          <a
+            className="text-accent hover:underline"
+            href={`mailto:${SITE.email}`}
+          >
+            {SITE.email}
+          </a>
+          . If nothing opened, email me directly at{" "}
           <a
             className="text-accent hover:underline"
             href={`mailto:${SITE.email}`}
@@ -127,6 +98,14 @@ export function ContactForm() {
           </a>
           .
         </p>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => setLaunched(false)}
+        >
+          Write another message
+        </Button>
       </div>
     );
   }
@@ -136,9 +115,7 @@ export function ContactForm() {
       onSubmit={handleSubmit}
       className="flex flex-col gap-6"
       aria-label="Contact form"
-      aria-busy={status === "sending"}
       noValidate
-      onFocus={startClock}
     >
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
@@ -154,7 +131,6 @@ export function ContactForm() {
             type="text"
             required
             autoComplete="name"
-            disabled={status === "sending"}
             aria-invalid={errors.name ? true : undefined}
             aria-describedby={errors.name ? "name-error" : undefined}
             value={name}
@@ -183,7 +159,6 @@ export function ContactForm() {
             type="email"
             required
             autoComplete="email"
-            disabled={status === "sending"}
             aria-invalid={errors.email ? true : undefined}
             aria-describedby={errors.email ? "email-error" : undefined}
             value={email}
@@ -201,20 +176,6 @@ export function ContactForm() {
         </div>
       </div>
 
-      {/* Honeypot — hidden from humans, traps bots. Must remain empty. */}
-      <div className="hidden" aria-hidden="true">
-        <label htmlFor="email_address">Do not fill this in</label>
-        <input
-          id="email_address"
-          name="email_address"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={honeypot}
-          onChange={(event) => setHoneypot(event.target.value)}
-        />
-      </div>
-
       <div className="flex flex-col gap-2">
         <label
           htmlFor="subject"
@@ -229,7 +190,6 @@ export function ContactForm() {
           id="subject"
           name="subject"
           type="text"
-          disabled={status === "sending"}
           value={subject}
           onChange={(event) => setSubject(event.target.value)}
           className={INPUT_CLASSES}
@@ -248,7 +208,6 @@ export function ContactForm() {
           name="message"
           required
           rows={6}
-          disabled={status === "sending"}
           aria-invalid={errors.message ? true : undefined}
           aria-describedby={errors.message ? "message-error" : undefined}
           value={message}
@@ -273,45 +232,20 @@ export function ContactForm() {
         ) : null}
       </div>
 
-      {status === "error" && serverError ? (
-        <p
-          role="alert"
-          className="flex items-start gap-2 rounded-lg border border-red-500/40 bg-red-500/5 p-3 text-sm text-red-600"
-        >
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>
-            {serverError}{" "}
-            <span className="text-text-secondary">
-              Alternatively, email me directly at{" "}
-              <a
-                className="text-accent hover:underline"
-                href={`mailto:${SITE.email}`}
-              >
-                {SITE.email}
-              </a>
-              .
-            </span>
-          </span>
-        </p>
-      ) : null}
-
       <div className="flex items-center gap-4">
-        <Button type="submit" disabled={status === "sending"}>
-          {status === "sending" ? (
-            <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
-          ) : (
-            <Send className="h-4 w-4" />
-          )}
-          {status === "sending" ? "Sending…" : "Send message"}
+        <Button type="submit">
+          <Send className="h-4 w-4" />
+          Compose email
         </Button>
         <p className="text-xs text-text-secondary">
-          Delivered securely to {SITE.email}.{" "}
+          Opens in your default mail app, addressed to {SITE.email}.{" "}
           <a
             className="text-accent hover:underline"
             href={`mailto:${SITE.email}`}
           >
-            Prefer email?
+            Or email me directly
           </a>
+          .
         </p>
       </div>
     </form>

@@ -7,7 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
 import { ProfilePhoto } from "@/components/ui/ProfilePhoto";
 import { TagList } from "@/components/ui/TagList";
-import { CV_PATH, SITE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 import {
   DOMAINS,
   EDUCATION,
@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About Nabin Dhungana — System & Network Engineer focused on enterprise networking, system administration, cloud infrastructure, virtualization, and cybersecurity.",
+    "About Nabin Dhungana — a System & Network Engineer working on enterprise networking, system administration, cloud infrastructure, virtualization, and cybersecurity.",
   alternates: {
     canonical: "/about",
   },
@@ -58,13 +58,10 @@ export default function AboutPage() {
                 Career Direction
               </h2>
               <p className="mt-6 text-lg leading-8 text-text-secondary">
-                Currently working as a System &amp; Network Engineer at{" "}
-                <span className="font-medium text-text-primary">
-                  {PROFILE.company}
-                </span>{" "}
-                (since {PROFILE.roleStart}). Long-term focus is Cloud Solutions
-                Architecture — designing reliable, secure, and scalable
-                infrastructure.
+                My long-term focus is Cloud Solutions Architecture — designing
+                reliable, secure, and scalable infrastructure. I work hands-on
+                every day to keep that direction grounded in practical
+                engineering, not just theory.
               </p>
             </Reveal>
 
@@ -179,9 +176,6 @@ export default function AboutPage() {
                 <Button asChild>
                   <Link href="/contact">Get in touch</Link>
                 </Button>
-                <Button asChild variant="outline">
-                  <Link href={CV_PATH}>Download CV</Link>
-                </Button>
               </div>
             </Reveal>
           </div>
@@ -199,9 +193,7 @@ export default function AboutPage() {
                       <dt className="font-mono text-xs uppercase tracking-widest text-text-secondary">
                         Role
                       </dt>
-                      <dd className="mt-2 text-text-primary">
-                        {PROFILE.role} at {PROFILE.company}
-                      </dd>
+                      <dd className="mt-2 text-text-primary">{PROFILE.role}</dd>
                     </div>
                     <div>
                       <dt className="font-mono text-xs uppercase tracking-widest text-text-secondary">
