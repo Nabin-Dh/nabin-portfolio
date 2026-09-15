@@ -128,17 +128,13 @@ export default function Home() {
       <Hero />
 
       <section className="border-t border-border-subtle">
-        <Container className="py-16 sm:py-20">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-14">
+        <Container className="py-8 sm:py-12">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
             <Reveal className="lg:col-span-5">
-              <SectionHeading
-                eyebrow="who i am"
-                title="Who I am."
-                description="A short introduction before the work below."
-              />
+              <SectionHeading eyebrow="who i am" title="Who I am." />
             </Reveal>
             <Reveal delay={80} className="lg:col-span-7">
-              <div className="rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)] sm:p-8">
+              <div className="rounded-xl border border-border-subtle bg-background-card p-5 shadow-[var(--shadow-card)] sm:p-6">
                 <p
                   aria-hidden="true"
                   className="flex items-center gap-2 font-mono text-sm text-accent"
@@ -146,12 +142,12 @@ export default function Home() {
                   <span className="select-none">$</span>
                   <span>whoami</span>
                 </p>
-                <p className="mt-4 text-lg leading-8 text-text-primary">
+                <p className="mt-3 text-lg leading-8 text-text-primary">
                   {PROFILE.intro}
                 </p>
                 <Link
                   href="/about"
-                  className="mt-6 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
+                  className="mt-4 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
                 >
                   read the full profile...
                   <ArrowUpRight className="h-3.5 w-3.5" />
@@ -163,7 +159,7 @@ export default function Home() {
       </section>
 
       <section className="border-t border-border-subtle">
-        <Container className="py-16 sm:py-20">
+        <Container className="py-8 sm:py-12">
           <Reveal>
             <SectionHeading
               eyebrow="focus"
@@ -171,7 +167,7 @@ export default function Home() {
               description={FOCUS_INTRO}
             />
           </Reveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {FOCUS_AREAS.map((area, index) => {
               const Icon = FOCUS_ICONS[area.icon];
               return (
@@ -180,7 +176,7 @@ export default function Home() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-accent">
                       <Icon className="h-4.5 w-4.5" />
                     </div>
-                    <h3 className="mt-4 text-base font-semibold text-text-primary">
+                    <h3 className="mt-3 text-base font-semibold text-text-primary">
                       {area.title}
                     </h3>
                     <p className="mt-2 text-sm leading-6 text-text-secondary">
@@ -194,8 +190,25 @@ export default function Home() {
         </Container>
       </section>
 
+      <section className="border-t border-border-subtle bg-background-secondary/50">
+        <Container className="py-8 sm:py-12">
+          <Reveal>
+            <SectionHeading
+              eyebrow="technologies"
+              title="Technologies."
+              description="The systems, platforms, and tooling I work with day to day."
+            />
+          </Reveal>
+          <Reveal delay={80}>
+            <div className="mt-8">
+              <TechnologyMarquee />
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
       <section className="border-t border-border-subtle">
-        <Container className="py-16 sm:py-20">
+        <Container className="py-8 sm:py-12">
           <Reveal>
             <SectionHeading
               eyebrow="projects"
@@ -203,7 +216,7 @@ export default function Home() {
               description="Two infrastructure designs — campus networking and Azure cloud architecture."
             />
           </Reveal>
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
             {featuredProjects.map((project, index) => (
               <Reveal key={project.slug} delay={index * 60}>
                 <SpotlightCard className="h-full">
@@ -215,7 +228,7 @@ export default function Home() {
           <Reveal delay={120}>
             <Link
               href="/projects"
-              className="mt-8 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
+              className="mt-6 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
             >
               view all projects...
               <ArrowUpRight className="h-3.5 w-3.5" />
@@ -224,25 +237,8 @@ export default function Home() {
         </Container>
       </section>
 
-      <section className="border-t border-border-subtle bg-background-secondary/50">
-        <Container className="py-16 sm:py-20">
-          <Reveal>
-            <SectionHeading
-              eyebrow="technologies"
-              title="Technologies."
-              description="The systems, platforms, and tooling I work with day to day."
-            />
-          </Reveal>
-          <Reveal delay={80}>
-            <div className="mt-12">
-              <TechnologyMarquee />
-            </div>
-          </Reveal>
-        </Container>
-      </section>
-
       <section className="border-t border-border-subtle">
-        <Container className="py-16 sm:py-20">
+        <Container className="py-8 sm:py-12">
           <Reveal>
             <SectionHeading
               eyebrow="credentials"
@@ -250,10 +246,10 @@ export default function Home() {
               description="Certifications in cloud, networking, and security."
             />
           </Reveal>
-          <ul className="mt-12 divide-y divide-border-subtle border-y border-border-subtle">
+          <ul className="mt-8 divide-y divide-border-subtle border-y border-border-subtle">
             {CERTIFICATIONS.map((cert, index) => (
               <Reveal key={cert.title} delay={index * 40}>
-                <li className="flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between">
+                <li className="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:justify-between">
                   <span className="text-base font-medium text-text-primary">
                     {cert.title}
                   </span>
@@ -268,7 +264,7 @@ export default function Home() {
           <Reveal delay={120}>
             <Link
               href="/about"
-              className="mt-6 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
+              className="mt-4 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
             >
               read more in about...
               <ArrowUpRight className="h-3.5 w-3.5" />
@@ -278,8 +274,8 @@ export default function Home() {
       </section>
 
       <section className="border-t border-border-subtle bg-background-secondary/50">
-        <Container className="py-16 sm:py-20">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-14">
+        <Container className="py-8 sm:py-12">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
             <Reveal className="lg:col-span-5">
               <SectionHeading
                 eyebrow="contact"
@@ -332,28 +328,28 @@ function Hero() {
         aria-hidden="true"
         className="bg-grid mask-fade-b absolute inset-0"
       />
-      <Container className="relative grid gap-12 py-20 sm:py-28 lg:grid-cols-12 lg:items-center lg:gap-10 lg:py-32">
+      <Container className="relative grid gap-8 py-10 sm:py-14 lg:grid-cols-12 lg:items-center lg:gap-10 lg:py-16">
         <div className="lg:col-span-7">
           <Reveal>
-            <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-semibold leading-[1.05] tracking-tight text-text-primary sm:text-4xl lg:text-5xl">
               Nabin Dhungana
             </h1>
           </Reveal>
           <Reveal delay={80}>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-text-primary sm:text-xl">
+            <p className="mt-4 max-w-xl text-lg leading-8 text-text-primary sm:text-xl">
               I work across networking, systems, security, and cloud
               infrastructure, with a growing focus on cloud architecture.
             </p>
           </Reveal>
           <Reveal delay={140}>
-            <p className="mt-4 max-w-xl text-lg leading-8 text-text-secondary">
+            <p className="mt-2 max-w-xl text-lg leading-8 text-text-secondary">
               I build and understand reliable infrastructure — networks that
               switch and route, servers that stay up, and cloud environments
               designed secure and scalable from the start.
             </p>
           </Reveal>
           <Reveal delay={220}>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <a
                 href={SITE.socials.github}
                 target="_blank"
@@ -386,15 +382,15 @@ function Hero() {
           </Reveal>
         </div>
 
-        <div className="lg:col-span-5">
+        <div className="hidden lg:block lg:col-span-5">
           <Reveal delay={200}>
             <div className="relative mx-auto max-w-sm">
-              <div className="relative rounded-3xl border border-border-subtle bg-background-card/80 p-5 shadow-[var(--shadow-card)] backdrop-blur">
+              <div className="relative rounded-3xl border border-border-subtle bg-background-card/80 p-4 shadow-[var(--shadow-card)] backdrop-blur">
                 <ProfilePhoto
                   name={SITE.name}
                   className="aspect-square w-full"
                 />
-                <dl className="mt-5 space-y-3">
+                <dl className="mt-4 space-y-3">
                   <div className="flex items-center justify-between rounded-xl border border-border-subtle bg-background-elevated/60 px-4 py-3">
                     <dt className="font-mono text-xs uppercase tracking-widest text-text-secondary">
                       Focus
