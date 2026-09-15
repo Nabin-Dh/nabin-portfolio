@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { InsightFilters } from "@/components/insights/InsightFilters";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
-import { Link } from "@/components/ui/Link";
 import { SITE } from "@/lib/constants";
 import { getAllInsights, getAllTags } from "@/lib/insights";
 
@@ -29,7 +28,7 @@ export default function InsightsPage() {
   return (
     <div className="flex flex-col">
       <PageHeader
-        eyebrow="/insights"
+        eyebrow="insights"
         title="Insights"
         description="Technical write-ups on networking, systems, cloud, and security."
       />
@@ -49,12 +48,6 @@ export default function InsightsPage() {
               cybersecurity will appear here with search, tag filtering, and
               table of contents included by default.
             </p>
-            <Link
-              href="/contact"
-              className="mt-8 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
-            >
-              request a topic...
-            </Link>
           </div>
         ) : (
           <InsightFilters insights={insights} tags={tags} />

@@ -1,63 +1,43 @@
 export type FocusArea = {
   title: string;
   icon: "network" | "systems" | "cloud" | "security";
-  summary: string;
-  points: string[];
+  description: string;
 };
+
+export const FOCUS_INTRO =
+  "My work and learning span the core areas of modern infrastructure, from networking and systems to cloud and security.";
 
 export const FOCUS_AREAS: FocusArea[] = [
   {
     title: "Networking",
     icon: "network",
-    summary:
-      "Enterprise networking — routing, switching, IP addressing, and access-layer security.",
-    points: [
-      "Routing & switching",
-      "IP addressing & VLAN segmentation",
-      "Access-layer security",
-      "Wireless networking",
-    ],
+    description:
+      "Network infrastructure, connectivity, routing, switching, segmentation, and secure access.",
   },
   {
     title: "Systems",
     icon: "systems",
-    summary:
-      "Windows and Linux servers across physical and virtualized environments.",
-    points: [
-      "Windows & Linux administration",
-      "Virtualization (VMware ESXi)",
-      "Infrastructure troubleshooting",
-      "Patch & lifecycle management",
-    ],
+    description:
+      "Windows and Linux environments, virtualization, administration, and infrastructure operations.",
   },
   {
     title: "Cloud",
     icon: "cloud",
-    summary:
-      "Secure, scalable cloud infrastructure on Microsoft Azure — with a growing focus on cloud architecture.",
-    points: [
-      "Azure virtual networking",
-      "Identity & access (RBAC)",
-      "Security & observability",
-      "Multi-cloud fundamentals (AWS)",
-    ],
+    description:
+      "Cloud infrastructure, networking, identity, security, and architecture across Azure and AWS.",
   },
   {
     title: "Security",
     icon: "security",
-    summary:
-      "Network security, hardening, and least privilege informed by modern security frameworks.",
-    points: [
-      "Network security controls",
-      "System hardening",
-      "Identity & access fundamentals",
-      "Zero-trust principles",
-    ],
+    description:
+      "Security fundamentals across infrastructure, access control, hardening, monitoring, and network environments.",
   },
 ];
 
 export const PROFILE = {
   name: "Nabin Dhungana",
+  intro:
+    "I work across networking, systems, cloud, and security. My background is hands-on network and systems administration; my focus now is moving that experience toward cloud infrastructure and architecture.",
   bio: "I have two-plus years of hands-on experience working across networking, cybersecurity, systems engineering, infrastructure, and cloud. My foundation is in network and systems administration — troubleshooting, operations, and keeping infrastructure running. My current direction is increasingly focused on cloud infrastructure and cloud architecture: designing secure, scalable, and maintainable environments.",
   direction:
     "My focus is on infrastructure that is reliable first and simple to operate. I build up from hands-on network and systems work, and I am steering that experience toward cloud architecture so the environments I help design are secure, scalable, and maintainable.",

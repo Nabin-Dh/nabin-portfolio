@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Infrastructure projects I've designed and built — enterprise networking and Azure cloud architecture.",
+    "Infrastructure projects I've designed and built — campus networking and Azure cloud architecture.",
   alternates: {
     canonical: "/projects",
   },
@@ -16,9 +16,9 @@ export default function ProjectsPage() {
   return (
     <div className="flex flex-col">
       <PageHeader
-        eyebrow="/projects"
+        eyebrow="projects"
         title="Projects"
-        description="Selected infrastructure designs across enterprise networking and Azure cloud architecture."
+        description="Selected infrastructure designs across campus networking and Azure cloud architecture."
       />
 
       <Container className="py-16 sm:py-24">

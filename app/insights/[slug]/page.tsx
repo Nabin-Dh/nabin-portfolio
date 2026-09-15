@@ -89,7 +89,7 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
   return (
     <div className="flex flex-col">
       <PageHeader
-        eyebrow={`/insights / ${insight.date}`}
+        eyebrow={insight.date}
         title={insight.title}
         description={insight.description}
       />

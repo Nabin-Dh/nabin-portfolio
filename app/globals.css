@@ -230,8 +230,18 @@ body {
 }
 
 /* Technology marquee (paired with <TechnologyMarquee />) */
+.marquee {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+}
+
 .marquee-track {
-  animation: marquee-scroll 40s linear infinite;
+  animation: marquee-scroll 45s linear infinite;
 }
 
 .marquee:hover .marquee-track,

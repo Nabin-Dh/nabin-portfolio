@@ -10,7 +10,7 @@ import { SITE } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with Nabin Dhungana about networking, systems, cloud infrastructure, and security.",
+    "Reach Nabin Dhungana about networking, systems, cloud infrastructure, and security.",
   alternates: {
     canonical: "/contact",
   },
@@ -51,9 +51,9 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col">
       <PageHeader
-        eyebrow="/contact"
+        eyebrow="contact"
         title="Contact"
-        description="Questions about the projects here, feedback, or help with an infrastructure problem — get in touch."
+        description="Questions about the projects here, feedback, or help with an infrastructure problem — email is the most direct route."
       />
 
       <Container className="py-16 sm:py-24">
@@ -65,7 +65,7 @@ export default function ContactPage() {
               </h2>
               <p className="mt-3 text-text-secondary">
                 Compose an email in your mail app with the details pre-filled —
-                no server involved, your message goes straight to my inbox.
+                no server involved, your message goes straight to the inbox.
               </p>
               <div className="mt-8">
                 <ContactForm />

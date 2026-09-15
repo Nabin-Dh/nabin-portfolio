@@ -65,7 +65,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   return (
     <div className="flex flex-col">
       <PageHeader
-        eyebrow={`/projects / ${project.category}`}
+        eyebrow={project.category}
         title={project.title}
         description={project.description}
       />

@@ -1,9 +1,8 @@
-import { ArrowUpRight, Cloud, Mail } from "lucide-react";
+import { ArrowUpRight, Award, Cloud, Mail } from "lucide-react";
 import type { Metadata } from "next";
 import { Reveal } from "@/components/fx/Reveal";
 import { SpotlightCard } from "@/components/fx/SpotlightCard";
 import { ProjectCard } from "@/components/projects/ProjectCard";
-import { Button } from "@/components/ui/Button";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
@@ -11,7 +10,13 @@ import { ProfilePhoto } from "@/components/ui/ProfilePhoto";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TechnologyMarquee } from "@/components/ui/TechnologyMarquee";
 import { SITE } from "@/lib/constants";
-import { CERTIFICATIONS, FOCUS_AREAS, PROFILE, PROJECTS } from "@/lib/content";
+import {
+  CERTIFICATIONS,
+  FOCUS_AREAS,
+  FOCUS_INTRO,
+  PROFILE,
+  PROJECTS,
+} from "@/lib/content";
 
 export const metadata: Metadata = {
   title: SITE.name,
@@ -20,6 +25,37 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 };
+
+const CONTACT_CHANNELS = [
+  {
+    label: "Email",
+    value: SITE.email,
+    href: `mailto:${SITE.email}`,
+    icon: Mail,
+    external: false,
+  },
+  {
+    label: "LinkedIn",
+    value: "in/nabin-dhungana",
+    href: SITE.socials.linkedin,
+    icon: LinkedinIcon,
+    external: true,
+  },
+  {
+    label: "GitHub",
+    value: "Nabin-Dh",
+    href: SITE.socials.github,
+    icon: GithubIcon,
+    external: true,
+  },
+  {
+    label: "Credentials",
+    value: "credly.com",
+    href: SITE.socials.credly,
+    icon: Award,
+    external: true,
+  },
+] as const;
 
 const FOCUS_ICONS = {
   network: NetworkIcon,
@@ -93,11 +129,46 @@ export default function Home() {
 
       <section className="border-t border-border-subtle">
         <Container className="py-16 sm:py-20">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-14">
+            <Reveal className="lg:col-span-5">
+              <SectionHeading
+                eyebrow="who i am"
+                title="Who I am."
+                description="A short introduction before the work below."
+              />
+            </Reveal>
+            <Reveal delay={80} className="lg:col-span-7">
+              <div className="rounded-xl border border-border-subtle bg-background-card p-6 shadow-[var(--shadow-card)] sm:p-8">
+                <p
+                  aria-hidden="true"
+                  className="flex items-center gap-2 font-mono text-sm text-accent"
+                >
+                  <span className="select-none">$</span>
+                  <span>whoami</span>
+                </p>
+                <p className="mt-4 text-lg leading-8 text-text-primary">
+                  {PROFILE.intro}
+                </p>
+                <Link
+                  href="/about"
+                  className="mt-6 inline-flex items-center gap-1 font-mono text-sm text-accent transition-colors hover:text-text-primary"
+                >
+                  read the full profile...
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </Reveal>
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-border-subtle">
+        <Container className="py-16 sm:py-20">
           <Reveal>
             <SectionHeading
-              eyebrow="/focus"
+              eyebrow="focus"
               title="What I work across."
-              description="Four overlapping areas where I work hands-on, from the physical layer to the cloud."
+              description={FOCUS_INTRO}
             />
           </Reveal>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -105,7 +176,7 @@ export default function Home() {
               const Icon = FOCUS_ICONS[area.icon];
               return (
                 <Reveal key={area.title} delay={index * 60}>
-                  <div className="group h-full rounded-xl border border-border-subtle bg-background-card p-5 shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)]">
+                  <div className="group h-full rounded-xl border border-border-subtle bg-background-card p-5 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-border-strong hover:shadow-[var(--shadow-card-hover)]">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-accent">
                       <Icon className="h-4.5 w-4.5" />
                     </div>
@@ -113,7 +184,7 @@ export default function Home() {
                       {area.title}
                     </h3>
                     <p className="mt-2 text-sm leading-6 text-text-secondary">
-                      {area.summary}
+                      {area.description}
                     </p>
                   </div>
                 </Reveal>
@@ -127,9 +198,9 @@ export default function Home() {
         <Container className="py-16 sm:py-20">
           <Reveal>
             <SectionHeading
-              eyebrow="/projects"
+              eyebrow="projects"
               title="Selected work."
-              description="Two infrastructure designs — enterprise networking and Azure cloud architecture."
+              description="Two infrastructure designs — campus networking and Azure cloud architecture."
             />
           </Reveal>
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
@@ -157,7 +228,7 @@ export default function Home() {
         <Container className="py-16 sm:py-20">
           <Reveal>
             <SectionHeading
-              eyebrow="/stack"
+              eyebrow="technologies"
               title="Technologies."
               description="The systems, platforms, and tooling I work with day to day."
             />
@@ -174,7 +245,7 @@ export default function Home() {
         <Container className="py-16 sm:py-20">
           <Reveal>
             <SectionHeading
-              eyebrow="/credentials"
+              eyebrow="credentials"
               title="Credentials."
               description="Certifications in cloud, networking, and security."
             />
@@ -206,29 +277,48 @@ export default function Home() {
         </Container>
       </section>
 
-      <section className="border-t border-border-subtle">
+      <section className="border-t border-border-subtle bg-background-secondary/50">
         <Container className="py-16 sm:py-20">
-          <Reveal>
-            <div className="flex flex-col gap-6 rounded-2xl border border-border-subtle bg-background-card p-8 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:justify-between">
-              <div className="max-w-xl">
-                <p className="font-mono text-xs uppercase tracking-widest text-accent">
-                  about
-                </p>
-                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-text-primary">
-                  The full picture
-                </h2>
-                <p className="mt-3 leading-7 text-text-secondary">
-                  {PROFILE.bio}
-                </p>
-              </div>
-              <Button asChild className="shrink-0">
-                <Link href="/about">
-                  Read about me
-                  <ArrowUpRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </Reveal>
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-14">
+            <Reveal className="lg:col-span-5">
+              <SectionHeading
+                eyebrow="contact"
+                title="Contact."
+                description="The simplest way to reach me is email. Profiles and credentials are linked below."
+              />
+            </Reveal>
+            <Reveal delay={80} className="lg:col-span-7">
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {CONTACT_CHANNELS.map((channel) => {
+                  const Icon = channel.icon;
+                  return (
+                    <li key={channel.label}>
+                      <a
+                        href={channel.href}
+                        target={channel.external ? "_blank" : undefined}
+                        rel={
+                          channel.external ? "noopener noreferrer" : undefined
+                        }
+                        className="group flex items-center gap-3 rounded-xl border border-border-subtle bg-background-card p-4 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-accent/60 hover:shadow-[var(--shadow-card-hover)]"
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-accent-muted text-text-secondary transition-colors group-hover:text-accent">
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-xs text-text-secondary">
+                            {channel.label}
+                          </span>
+                          <span className="block truncate text-sm font-medium text-text-primary">
+                            {channel.value}
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </Reveal>
+          </div>
         </Container>
       </section>
     </div>

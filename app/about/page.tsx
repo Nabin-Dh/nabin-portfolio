@@ -13,6 +13,7 @@ import {
   CERTIFICATIONS,
   ENGINEERING_APPROACH,
   FOCUS_AREAS,
+  FOCUS_INTRO,
   type FocusArea,
   PROFILE,
 } from "@/lib/content";
@@ -37,7 +38,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col">
       <PageHeader
-        eyebrow="/about"
+        eyebrow="about"
         title="About"
         description="Hands-on infrastructure engineering across networking, systems, security, and cloud."
       />
@@ -67,10 +68,9 @@ export default function AboutPage() {
               <h2 className="mt-12 text-2xl font-semibold tracking-tight text-text-primary">
                 What I work across
               </h2>
-              <p className="mt-6 leading-7 text-text-secondary">
-                My work and learning span four domains. Each one is a layer of
-                infrastructure I touch directly — not a collection of isolated
-                tools.
+              <p className="mt-6 text-lg leading-7 text-text-secondary">
+                {FOCUS_INTRO} Each domain is a layer of infrastructure I work
+                with directly, not an isolated list of tools.
               </p>
               <div className="mt-8 grid gap-6 sm:grid-cols-2">
                 {FOCUS_AREAS.map((area, index) => {
@@ -86,18 +86,8 @@ export default function AboutPage() {
                             {area.title}
                           </h3>
                           <p className="mt-2 text-sm leading-6 text-text-secondary">
-                            {area.summary}
+                            {area.description}
                           </p>
-                          <ul className="mt-4 flex flex-col gap-1.5">
-                            {area.points.map((point) => (
-                              <li
-                                key={point}
-                                className="before:mr-2 before:text-accent before:content-['·'] text-sm text-text-secondary"
-                              >
-                                {point}
-                              </li>
-                            ))}
-                          </ul>
                         </div>
                       </SpotlightCard>
                     </Reveal>
@@ -168,10 +158,10 @@ export default function AboutPage() {
             <Reveal delay={140}>
               <div className="mt-12 flex flex-wrap gap-4">
                 <Button asChild>
-                  <Link href="/projects">View my projects</Link>
+                  <Link href="/projects">See my projects</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href="/contact">Get in touch</Link>
+                  <Link href="/contact">Contact</Link>
                 </Button>
               </div>
             </Reveal>
