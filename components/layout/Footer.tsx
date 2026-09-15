@@ -4,12 +4,12 @@ import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { CloudLogo } from "@/components/ui/CloudLogo";
 import { Container } from "@/components/ui/Container";
 import { Link } from "@/components/ui/Link";
-import { CONTACT_TOPICS, NAV_LINKS, SITE } from "@/lib/constants";
+import { NAV_LINKS, SITE } from "@/lib/constants";
 
 export function Footer() {
   return (
     <footer className="border-t border-border-subtle bg-background-secondary/40">
-      <Container className="grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <Container className="grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div className="max-w-sm">
           <Link
             href="/"
@@ -22,8 +22,8 @@ export function Footer() {
             </span>
           </Link>
           <p className="mt-4 text-sm leading-6 text-text-secondary">
-            System &amp; Network Engineer | Aspiring Cloud Solutions Architect.
-            Engineer of reliable, secure, and scalable infrastructure.
+            {SITE.tagline} I build and understand reliable infrastructure — from
+            switches and servers to secure, scalable cloud environments.
           </p>
           <a
             href={`mailto:${SITE.email}`}
@@ -80,16 +80,10 @@ export function Footer() {
             Resources
           </p>
           <Link
-            href="/projects"
+            href="/about"
             className="text-sm text-text-secondary transition-colors hover:text-text-primary"
           >
-            Projects
-          </Link>
-          <Link
-            href="/credentials"
-            className="text-sm text-text-secondary transition-colors hover:text-text-primary"
-          >
-            Credentials
+            About
           </Link>
           <a
             href={SITE.socials.credly}
@@ -99,24 +93,12 @@ export function Footer() {
           >
             Credly
           </a>
-        </nav>
-
-        <nav
-          aria-label="Ways to connect"
-          className="grid grid-cols-1 content-start gap-2"
-        >
-          <p className="font-mono text-xs uppercase tracking-widest text-text-secondary">
-            Let&apos;s connect
-          </p>
-          {CONTACT_TOPICS.map((topic) => (
-            <Link
-              key={topic}
-              href="/contact"
-              className="text-sm text-text-secondary transition-colors hover:text-text-primary"
-            >
-              {topic}
-            </Link>
-          ))}
+          <a
+            href={`mailto:${SITE.email}`}
+            className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+          >
+            Email
+          </a>
         </nav>
       </Container>
 
@@ -126,7 +108,7 @@ export function Footer() {
             © 2026 {SITE.name}. All rights reserved.
           </p>
           <p className="font-mono text-xs text-text-secondary">
-            System &amp; Network Engineering · Cloud · Security
+            Networking · Systems · Cloud · Security
           </p>
         </Container>
       </div>

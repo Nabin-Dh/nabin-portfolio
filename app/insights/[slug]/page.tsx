@@ -150,7 +150,7 @@ export default async function InsightDetailPage({ params }: InsightPageProps) {
                       {SITE.name}
                     </p>
                     <p className="text-sm text-text-secondary">
-                      {SITE.role.split("|")[0].trim()}
+                      {SITE.tagline}
                     </p>
                   </div>
                 </div>

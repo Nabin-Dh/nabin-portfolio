@@ -6,13 +6,13 @@
 
 ## Project Objective
 
-Build a production-quality personal portfolio website for Nabin Dhungana that communicates strong professional credibility as a **System & Network Engineer | Aspiring Cloud Solutions Architect**. The site should feel like a serious professional engineer's personal digital identity — not a generic AI-generated portfolio.
+Build a production-quality personal portfolio website for Nabin Dhungana that communicates serious professional credibility as an **infrastructure engineer working across networking, systems, security, and cloud, with a growing focus on cloud architecture**. The site should feel like a serious professional engineer's personal digital identity — not a generic AI-generated portfolio.
 
 ---
 
 ## Confirmed Professional Positioning
 
-**Title:** System & Network Engineer | Aspiring Cloud Solutions Architect
+**Positioning:** infrastructure engineer across networking, systems, security, and cloud — no job titles, "open to work" lines, or exaggerated claims. First-person, plain, professional.
 
 **Core competencies to communicate:**
 - System administration
@@ -48,15 +48,12 @@ Build a production-quality personal portfolio website for Nabin Dhungana that co
 
 | Route | Page | Description |
 |---|---|---|
-| `/` | Home | Hero, featured work, skills overview, latest insights |
-| `/about` | About | Bio, career timeline, engineering philosophy |
-| `/expertise` | Expertise | Skill categories, tools, technologies matrix |
-| `/experience` | Experience | Work history, roles, responsibilities |
+| `/` | Home | Hero, focus areas, selected work, technologies, credentials |
+| `/about` | About | Bio, focus areas, working approach, certifications |
 | `/projects` | Projects Index | Filterable grid of projects |
 | `/projects/[slug]` | Project Detail | Full project writeup |
 | `/insights` | Insights Index | Blog-style listing |
 | `/insights/[slug]` | Insight Detail | Full MDX-rendered article |
-| `/credentials` | Credentials | Certifications, training, education |
 | `/contact` | Contact | Contact form (mailto) + direct links |
 | `/feed.xml` | RSS Feed | Auto-generated |
 
@@ -74,16 +71,12 @@ RootLayout
 ```
 
 ### Component Categories
-- `components/layout/` — Navbar, Footer, PageTransition, SectionReveal
-- `components/home/` — Hero, FeaturedProjects, SkillsOverview, LatestInsights
-- `components/about/` — Bio, Timeline, Philosophy
-- `components/expertise/` — SkillCard, SkillCategory, ToolGrid
+- `components/layout/` — Navbar, Footer, PageHeader, PageTransition
+- `components/fx/` — Reveal, SpotlightCard, GradientOrbs, PageTransition
 - `components/projects/` — ProjectCard, ProjectGrid, ProjectFilters, ProjectDetail
-- `components/insights/` — PostCard, PostList, MDXComponents
-- `components/credentials/` — CertCard, CertGrid
-- `components/contact/` — ContactForm, ContactInfo
-- `components/ui/` — Button, Card, Badge, Heading, Container, Grid, Link, Tooltip
-- `components/three/` — NetworkMesh, CloudParticles (if used)
+- `components/insights/` — PostCard, PostList, MDXComponents, feedback/metrics
+- `components/contact/` — ContactForm
+- `components/ui/` — Button, Container, Link, ProfilePhoto, TechnologyMarquee, brand-icons, ThemeScript, ThemeToggle
 
 ### Rules
 - Server components by default, client only when interactivity required
@@ -126,7 +119,7 @@ RootLayout
 
 **Confirmed content now stored in `lib/content.ts` + `lib/constants.ts`:**
 - [x] Professional bio/about text
-- [x] Current role (System & Network Engineer, Rolling Plans Pvt. Ltd., July 2026)
+- [x] Current focus areas (Networking, Systems, Cloud, Security)
 - [x] Skills by category (Networking, Systems, Cloud, Cybersecurity, Tools)
 - [x] Certifications (AZ-900, AZ-104, Google Cybersecurity, Aviatrix, RH124)
 - [x] Professional links (LinkedIn, GitHub, Credly, email)
@@ -355,18 +348,18 @@ non-expert guide. A developer is only needed for structural/design/code changes.
 
 **Professional-identity refinement:**
 - **CV removed site-wide:** `app/cv/route.ts` + `public/cv/nabin-dhungana-cv.pdf`
-  deleted; all CV CTAs stripped from Navbar, Footer, Hero, About, Experience, and
-  Contact (no download PDF is fabricated). The role/employer (`Rolling Plans
-  Pvt. Ltd.`, `July 2026`) entry was removed from `lib/content.ts` and experience
-  reframed as two-plus years of hands-on practice — no invented employer.
+  deleted; all CV CTAs stripped from Navbar, Footer, Hero, About, and Contact (no
+  download PDF is fabricated). No employer is named on the site; work history is
+  reframed as two-plus years of hands-on practice across networking, systems,
+  security, and cloud — no invented employer.
 - **Working-stack marquee (new) on the homepage:** `components/ui/TechnologyMarquee.tsx`
-  renders a seamless, reduced-motion-aware marquee of 22 monochrome inline SVG
-  chips (AWS, Microsoft Azure, Terraform, Ansible, NGINX, PowerShell, Linux,
-  Windows Server, Docker, Kubernetes, VMware, Git, GitHub, Python, Cisco,
-  Cloudflare, PostgreSQL, Active Directory, Bash, OpenVPN, Prometheus, Grafana).
-  Icons are inline `currentColor` SVG paths (simple-icons + devicons); "Active
-  Directory" renders as text-only. CSS + keyframes added in `app/globals.css`;
-  section wired into `app/page.tsx` after the Hero with eyebrow `/stack`.
+  renders a seamless, reduced-motion-aware marquee of 12 curated technology chips
+  (AWS, Microsoft Azure, Powershell, Linux, Windows Server, VMware, Git, GitHub,
+  Cisco, Bash) plus text-only chips for Active Directory, Aviatrix, and Red Hat.
+  Icons are inline `currentColor` SVG paths (simple-icons); brand accents use
+  per-technology colors that stay readable in both themes. "Active Directory",
+  "Aviatrix", and "Red Hat" render as text-only. CSS + keyframes added in
+  `app/globals.css`; section wired into `app/page.tsx` in the Technologies block.
 - **Contact form → `mailto:` composer** (`components/ui/ContactForm.tsx`): validates,
   opens the visitor's email client, gives feedback. No backend, no stored data.
 
@@ -537,10 +530,8 @@ non-expert guide. A developer is only needed for structural/design/code changes.
 - [x] Set up CV download as static asset path (public/cv/)
 - [x] Validate: lint pass, typecheck pass, production build pass, dev server 200
 - [x] Store confirmed profile data in lib/constants.ts + lib/content.ts
-- [x] Build Home page (Hero + featured skills/projects/credentials, CV button in hero)
-- [x] Build About page (bio, career direction, CV button, contact sidebar)
-- [x] Build Expertise page (skills grid by category)
-- [x] Build Experience page (confirmed Rolling Plans role timeline)
+- [x] Build Home page (Hero + focus areas/projects/technologies/credentials)
+- [x] Build About page (bio, career direction, focus areas, certifications, contact sidebar)
 - [x] Build Contact page (mailto contact form + direct channels + CV button)
 - [x] Create CV download path + placeholder PDF (no fabricated CV)
 - [x] Update Footer with confirmed social links
@@ -650,23 +641,21 @@ Phase 3 (Content System) is complete. See Completed Items above.
 ### 1. Current architecture
 
 ```
-Git repository  ── build (npm run build) ──▶  self-contained next start server
-      │                                           (continuous deploy on push)
-      ├─ app/          routes, layout, sitemap, robots, /cv route handler
+Git repository  ── build (npm run build) ──▶  static export (out/)
+      │                                           (GitHub Pages, automatic deploy on push)
+      ├─ app/          routes, layout, sitemap, robots
       ├─ components/   UI (server components by default, client islands for FX/filters)
       ├─ lib/          typed content layer (constants.ts, content.ts, insights.ts)
       ├─ content/insights/  article source (MDX + YAML frontmatter)
-      └─ public/       cv PDF, optional profile photo, future insight images
+      └─ public/       profile photo, CNAME, insight images
 ```
 
-- **Rendering:** nearly everything is statically generated at build time. `/` through
-  `/credentials`, `/insights`, `/projects` and both detail routes are SSG;
-  `/insights/[slug]` and `/projects/[slug]` use `generateStaticParams` +
-  `dynamicParams = false` (unknown slugs return 404). The only dynamic route is
-  `/cv`, a route handler that streams the PDF from `public/`.
-- **Content vs UI:** profile data, projects, experience, expertise, education, and
-  credentials live in typed TS data (`lib/constants.ts`, `lib/content.ts`) — no
-  markup. Articles live as MDX in `content/insights/`. The only adapter between
+- **Rendering:** everything is statically generated at build time. All routes are
+  SSG; `/insights/[slug]` and `/projects/[slug]` use `generateStaticParams` +
+  `dynamicParams = false` (unknown slugs return 404).
+- **Content vs UI:** profile data, focus areas, certifications, projects, and the
+  bio live in typed TS data (`lib/constants.ts`, `lib/content.ts`) — no markup.
+  Articles live as MDX in `content/insights/`. The only adapter between
   content and the app is `lib/insights.ts`.
 - **Build-time generated:** sitemap (incl. article URLs), robots.txt, JSON-LD
   (Person/WebSite/Article), OG metadata, security headers, fonts (self-hosted).
@@ -685,14 +674,12 @@ All edits are plain file edits in the repository, followed by a deploy-triggerin
 | What | Where | How |
 |---|---|---|
 | Insigh articles | `content/insights/<slug>.mdx` | Edit frontmatter + Markdown body; see `content/insights/README.md` for the full lifecycle (create/edit/delete/tags/dates/images/related) |
-| Bio, role, headline, email, socials | `lib/constants.ts` | Edit the `SITE` object |
+| Bio, tagline, email, socials | `lib/constants.ts` | Edit the `SITE` object |
 | Nav links | `lib/constants.ts` — `NAV_LINKS` | Edit array |
-| Domains, education, approach, tech experience | `lib/content.ts` | Edit `DOMAINS`, `EDUCATION`, `ENGINEERING_APPROACH`, `EXPERIENCE_DOMAINS` |
+| Focus areas, certifications | `lib/content.ts` | Edit `FOCUS_AREAS`, `CERTIFICATIONS`, `PROFILE`, `ENGINEERING_APPROACH` |
 | Projects | `lib/content.ts` — `PROJECTS` | Edit or append a typed entry |
-| Expertise skills | `lib/content.ts` — `SKILL_CATEGORIES` | Edit entries |
-| CV PDF | `public/cv/nabin-dhungana-cv.pdf` | Replace the file (keep the same filename) |
-| Profile photo | `public/profile/profile.jpg|png|webp` (or `me.jpg`) | Add the file; appears automatically after deploy rebuild |
-| Site domain | `.env.example` / host env `NEXT_PUBLIC_SITE_URL` | Optional; defaults to `https://nabindhungana.com` |
+| Profile photo | `public/profile/profile.jpg|jpeg|png|webp` | Add the file; appears automatically after deploy rebuild |
+| Site domain | `.env.example` / host env `NEXT_PUBLIC_SITE_URL` | Optional; defaults to `https://www.nabin-dhungana.com.np` |
 
 After the commit/push, the connected host rebuilds; no local machine or manual server
 action is needed.
@@ -841,7 +828,7 @@ Static/code-level hardening pass performed without running a server (production 
 - **Internal navigation consistency:** the footer "Open to" list rendered `<a href="/contact">` per item, forcing a full page reload; now uses the app `<Link>` for client-side navigation (matches all other internal links in the footer/nav).
 - **Spotlight consistency:** `SpotlightCard` was applied to `ProjectCard` only on the Projects index. It's now applied consistently to the Home featured projects and the project-detail "Related projects" as well, so the pointer spotlight micro-interaction is uniform everywhere project cards render.
 - **Dead data field now used:** `ExperienceDomain.area` was typed and set on all four entries but never read. The Experience page now maps each area to a Lucide icon (Network / Server / ShieldCheck / Cloud) shown in the technical-domain cards — gives the field purpose and improves visual scannability.
-- **OG image derived from constants:** `app/opengraph-image.tsx` hardcoded "System & Network Engineer" and "nabindhungana.com"; both are now derived from `SITE.role` (first segment) and `SITE.url` (host), so the image stays in sync if the site identity/domain ever changes.
+- **OG image derived from constants:** `app/opengraph-image.tsx` renders the tagline and domain from `SITE.tagline` and `SITE.url`, so the image stays in sync if the site identity/domain ever changes.
 - **Build-time fs efficiency (`lib/insights.ts`):** repeated `readAllInsights()` / `getAllSlugs()` / `getAllTags()` calls during a single build (sitemap, home, insights index, related) each re-read and re-parsed every MDX file. Added a module-level cache so the directory scan + file reads happen once per build. Also refactored `getInsightBySlug` to read each file once (it previously read the file twice — once for content/headings and again via `readInsightFile`), via a shared `readInsightWithContent` helper.
 - **Validation (2026-09-03):** `npm run lint` clean (52 files), `npm run typecheck` clean, `npm run build` green (17 routes, incl. 2 SSG project details + SSG insight route with zero prerendered posts). No running server started; static/code-level checks only.
 
@@ -876,14 +863,14 @@ Static/code-level hardening pass performed without running a server (production 
 
 ## Phase 2 Notes & Decisions
 
-- **Confirmed source of truth:** Real profile data for Nabin (bio, role at Rolling Plans Pvt. Ltd. July 2026, skills, certs, projects, links) was provided by the user and is stored in `lib/content.ts` and `lib/constants.ts`.
+- **Confirmed source of truth:** Real profile data for Nabin (bio, focus areas, certs, projects, links) was provided by the user and is stored in `lib/content.ts` and `lib/constants.ts`.
 - **Contact form:** Implemented as a `mailto:` client component (no backend/service added, per "no unnecessary backend services"). Resend/API integration deferred until a production server backend is needed.
 - **CV pathway:** Real PDF not provided. A clearly-labeled **placeholder PDF** was created at `public/cv/nabin-dhungana-cv.pdf` so the download pathway works and no link 404s. It must be replaced with Nabin's real CV. No fabricated CV content.
 - **Lucide brand icons removed:** The installed lucide-react (v1.38.0) no longer exports `Github`/`Linkedin`. Replaced with custom inline SVGs in `components/ui/brand-icons.tsx` (`GithubIcon`, `LinkedinIcon`).
 - **JSON-LD:** Person schema added to root layout; Biome `noDangerouslySetInnerHtml` suppressed with a `biome-ignore` comment (static, trusted data).
 - **Stats/fake counters avoided:** No fabricated statistics or counters anywhere. Per confirmed data only.
 - **Projects not yet built as pages:** The Projects index/detail pages are deferred to Phase 3 (as instructed). The 2 confirmed projects appear on Home only.
-- **Positioning honored:** Nabin presented as a working infrastructure professional (System & Network Engineer). No student/intern/fellow-teacher emphasis; no invented years of experience.
+- **Positioning honored:** Nabin presented as a working infrastructure professional across networking, systems, security, and cloud. No student/intern/fellow-teacher emphasis; no invented years of experience; no job titles or "open to work" language on the site.
 
 ---
 

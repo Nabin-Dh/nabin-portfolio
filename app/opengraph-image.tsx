@@ -5,7 +5,7 @@ import { SITE } from "@/lib/constants";
 export const runtime = "nodejs";
 export const dynamic = "force-static";
 
-export const alt = `${SITE.name} — ${SITE.headline}`;
+export const alt = `${SITE.name} — ${SITE.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,7 +15,7 @@ const TEXT_PRIMARY = "#e5e7eb";
 const TEXT_SECONDARY = "#9ca3af";
 const ACCENT = "#3b82f6";
 
-const ROLE_LINE = SITE.role.split("|")[0].trim();
+const TAGLINE = SITE.tagline;
 const DOMAIN_LINE = SITE.url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
 function gridBackground() {
@@ -137,7 +137,7 @@ export default function OpengraphImage() {
             display: "flex",
           }}
         >
-          {ROLE_LINE}
+          {TAGLINE}
         </div>
       </div>
 

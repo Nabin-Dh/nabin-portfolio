@@ -36,7 +36,8 @@ When you open that link, you will see a list of folders and files:
 
 - `app/` — the "engine" of the site. **Do not edit anything here.**
 - `components/` — visual building blocks. **Do not edit anything here.**
-- `lib/` — the "settings" where your profile data, projects, and expertise live.
+- `lib/` — the "settings" where your profile data, focus areas, projects, and
+  certifications live.
 - `content/insights/` — where your articles (Insights) live.
 - `public/` — where you put images: your profile photo (and the `CNAME` file
   that keeps the custom domain working). **Do not rename or delete `CNAME`.**
@@ -173,46 +174,59 @@ Notes:
 
 ## 6. How to update profile information
 
-Your core profile (name, job title, headline, the "about" bio, email, and social
-links) lives in **`lib/constants.ts`** and **`lib/content.ts`**.
+Your core profile (name, tagline, the "about" bio, email, and social links)
+lives in **`lib/constants.ts`** and **`lib/content.ts`**.
 
-- `lib/constants.ts` → the `SITE` block: name, role, headline, description,
-  email, and social links (LinkedIn, GitHub, Credly).
-- `lib/content.ts` → the longer paragraphs (bio, "About" text, focus areas).
+- `lib/constants.ts` → the `SITE` block: name, tagline, description, email, and
+  social links (LinkedIn, GitHub, Credly).
+- `lib/content.ts` → the longer paragraphs (bio, "About" text, focus areas,
+  certifications, projects).
 
 To edit: open the file, click the pencil, change the text between the
 double-quote marks next to the labels (`name:`...), and commit. Keep the
 quotes and formatting exactly as they are — only change the words inside.
 
-## 7. How to update experience (work history)
+## 7. How to update focus areas
 
-Work history is in **`lib/content.ts`**, in a section called `EXPERIENCE` (or
-`EMPLOYMENT`). Each job is a small block like:
+The four focus areas (Networking, Systems, Cloud, Security) are in
+**`lib/content.ts`**, in a section called `FOCUS_AREAS`. Each area is a small
+block containing a short `summary` and a `points` list:
 
 ```ts
 {
-  role: "System & Network Engineer",
-  company: "Rolling Plans Pvt. Ltd.",
-  period: "July 2026 – present",
-  // ...description lines
+  title: "Networking",
+  summary: "...a short description...",
+  points: ["...", "...", "..."],
+  icon: "network",
 },
 ```
 
-- **Add a job:** copy one existing `{ ... },` block, paste it after it, and
-  change the role/company/period/details.
-- **Edit a job:** change the text inside its block.
-- **Remove a job:** delete its whole `{ ... },` block.
+- **Add a point:** copy an existing `"..."` line and change the words.
+- **Edit a point or summary:** change the text inside the quotes.
+- **Remove a point:** delete its whole `"..."` line.
 
 Only change the words inside the quotes — keep the commas, brackets, and
 formatting otherwise identical.
 
-## 8. How to update expertise
+## 8. How to update certifications
 
-Expertise domains and skills are in **`lib/content.ts`**, in the `DOMAINS` and
-`SKILL_CATEGORIES` sections. Each domain/skill is a small text entry. To add,
-edit, or remove a skill, follow the same copy/edit/delete approach as
-experience: change only the quoted text, keep the surrounding formatting
-(commas, brackets) intact.
+Certifications are in **`lib/content.ts`**, in the `CERTIFICATIONS` section.
+Each one is a small block like:
+
+```ts
+{
+  title: "Microsoft Certified: Azure Administrator Associate",
+  issuer: "Microsoft",
+  issuedYear: 2024,
+},
+```
+
+- **Add a certification:** copy an existing `{ ... },` block and change the
+  words.
+- **Edit one:** change the text inside the quotes / the year number.
+- **Remove one:** delete its whole `{ ... },` block.
+
+Keep the commas and structure intact — only change the words inside.
 
 ## 9. How to add or edit projects
 
@@ -351,8 +365,8 @@ is meant to be public and is fine to commit.
 | Delete an article | `content/insights/<name>.mdx` | 3 |
 | Add article images | `public/images/insights/` | 5 |
 | Update profile/bio/links | `lib/constants.ts`, `lib/content.ts` | 6 |
-| Update experience | `lib/content.ts` | 7 |
-| Update expertise | `lib/content.ts` | 8 |
+| Update focus areas | `lib/content.ts` | 7 |
+| Update certifications | `lib/content.ts` | 8 |
 | Add/edit projects | `lib/content.ts` | 9 |
 | Replace profile photo | `public/profile/` | 10 |
 
@@ -375,8 +389,8 @@ normally need to touch anything — here's what's going on and how to change it.
   the design system (`app/globals.css` + `components/ui/ThemeToggle.tsx`). A
   developer would only change it if you wanted a different color palette.
 
-All pages (home, about, expertise, experience, projects, insights, credentials,
-contact) are designed to look correct in both themes. The ideas behind this:
+All pages (home, about, projects, insights, contact) are designed to look
+correct in both themes. The ideas behind this:
 
 - **Colors come from shared "design tokens"** defined once in `app/globals.css`
   (light values under `:root`, dark values under `[data-theme="dark"]`). Every

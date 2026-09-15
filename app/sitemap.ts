@@ -16,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 1,
     },
-    ...NAV_LINKS.map((link) => ({
+    ...NAV_LINKS.filter((link) => link.href !== "/").map((link) => ({
       url: `${SITE.url}${link.href}/`,
       lastModified: now,
       changeFrequency: "monthly" as const,

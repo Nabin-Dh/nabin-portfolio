@@ -37,7 +37,7 @@ function sender(): { fromEmail: string; fromName: string } | null {
 }
 
 function recipient(): string {
-  return process.env.CONTACT_TO_EMAIL || "nabinndh@gmail.com";
+  return process.env.CONTACT_TO_EMAIL || "nabinnd@gmail.com";
 }
 
 function clientIp(request: HttpRequest): string {

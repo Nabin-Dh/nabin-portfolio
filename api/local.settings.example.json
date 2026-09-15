@@ -7,6 +7,6 @@
     "SENDGRID_API_KEY": "YOUR_SENDGRID_API_KEY",
     "SENDGRID_FROM_EMAIL": "sender@your-verified-domain.com",
     "SENDGRID_FROM_NAME": "Nabin Dhungana",
-    "CONTACT_TO_EMAIL": "nabinndh@gmail.com"
+    "CONTACT_TO_EMAIL": "nabinnd@gmail.com"
   }
 }

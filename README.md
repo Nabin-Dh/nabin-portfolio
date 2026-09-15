@@ -1,7 +1,7 @@
 # Nabin Dhungana — Portfolio
 
-Personal portfolio and insights site for **Nabin Dhungana**, System & Network
-Engineer | Aspiring Cloud Solutions Architect.
+Personal portfolio and insights site for **Nabin Dhungana**, an infrastructure
+engineer working across networking, systems, security, and cloud.
 
 Deployed as a **fully static site on GitHub Pages** at
 `https://www.nabin-dhungana.com.np`.
@@ -49,8 +49,8 @@ fully static with a `mailto:` contact form and no backend.
 
 ## Editing content
 
-Profile data (bio, role, domains, education, experience, credentials, projects)
-lives in `lib/constants.ts` and `lib/content.ts` — simple typed TS data, separate
+Profile data (bio, focus areas, certifications, projects) lives in
+`lib/constants.ts` and `lib/content.ts` — simple typed TS data, separate
 from presentation. Insights are plain MDX files in `content/insights/`; see the
 README there for the full create/edit/delete workflow, frontmatter schema, and
 the private-file (`_`-prefixed) convention. All content is committed to the

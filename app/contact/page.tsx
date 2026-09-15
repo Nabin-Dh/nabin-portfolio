@@ -5,12 +5,12 @@ import { Reveal } from "@/components/fx/Reveal";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { Container } from "@/components/ui/Container";
-import { CONTACT_TOPICS, SITE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with me — questions, feedback, or collaboration opportunities.",
+    "Get in touch with Nabin Dhungana about networking, systems, cloud infrastructure, and security.",
   alternates: {
     canonical: "/contact",
   },
@@ -27,7 +27,7 @@ const CHANNELS = [
   {
     label: "LinkedIn",
     icon: LinkedinIcon,
-    value: "in/linkedin",
+    value: "in/nabin-dhungana",
     href: SITE.socials.linkedin,
     hint: "Professional",
   },
@@ -53,7 +53,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="/contact"
         title="Contact"
-        description="Have a technical problem, collaboration idea, or infrastructure project to discuss? Get in touch."
+        description="Questions about the projects here, feedback, or help with an infrastructure problem — get in touch."
       />
 
       <Container className="py-16 sm:py-24">
@@ -75,7 +75,7 @@ export default function ContactPage() {
 
           <aside className="lg:pl-8">
             <Reveal delay={80}>
-              <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-tight text-text-primary">
+              <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
                 Direct channels
               </h2>
             </Reveal>
@@ -108,24 +108,6 @@ export default function ContactPage() {
                   );
                 })}
               </ul>
-            </Reveal>
-
-            <Reveal delay={160}>
-              <div className="mt-8 rounded-xl border border-border-subtle bg-background-card p-6">
-                <h3 className="text-lg font-semibold text-text-primary">
-                  What I&apos;m open to
-                </h3>
-                <ul className="mt-4 space-y-2">
-                  {CONTACT_TOPICS.map((topic) => (
-                    <li
-                      key={topic}
-                      className="before:mr-2 before:text-accent before:content-['·'] text-sm text-text-secondary"
-                    >
-                      {topic}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </Reveal>
           </aside>
         </div>
