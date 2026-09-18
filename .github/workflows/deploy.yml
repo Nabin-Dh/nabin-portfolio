@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          PAGES_BASE_PATH: ${{ steps.setup_pages.outputs.base_path }}
+          PAGES_BASE_PATH: ""
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
